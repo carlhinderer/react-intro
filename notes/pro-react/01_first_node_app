@@ -85,6 +85,15 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
 - Adding the Bootstrap Framework
 
-    # Add bootstrap to project
-    $ cd todo
-    $ npm install bootstrap@4.1.2
+    - First, we need to add bootstrap to the project:
+    
+        # Add bootstrap to project
+        $ cd todo
+        $ npm install bootstrap@4.1.2
+
+
+    - Next, we need to add it to the imports in our 'index.js' file.  Note that the 'import'
+        statement can declare both JS and CSS dependencies.
+
+        # Add after other import statements in todo/src/index.js
+        import 'bootstrap/dist/css/bootstrap.css';
