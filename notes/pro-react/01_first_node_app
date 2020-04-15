@@ -42,3 +42,49 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
         # Create new react app
         $ npx create-react-app todo
+
+
+    - The directory structure of the new application looks like:
+
+        > todo
+            > node_modules
+            > public
+                favicon.ico
+                index.html
+                manifest.json
+            > src
+                App.css
+                App.js
+                App.test.js
+                index.css
+                index.js
+                logo.svg
+                registerServiceWorker.js
+            .gitignore
+            package.json
+            package-lock.json
+            README.md
+
+
+    - Important files include:
+
+        public/index.html
+          This is the html file loaded by the browser.  It contains an element in which the 
+            application is displayed and a script element that holds the JS files.
+
+        src/index.js
+          This is the JS file responsible for configuring and starting the React application.
+            We used it to add the Bootstrap CSS framework.
+
+        src/App.js
+          This is the React component, which contains the HTML content that will be displayed
+            to the user and the JS code required by the HTML.  Components are the building
+            blocks of React applications.
+
+
+
+- Adding the Bootstrap Framework
+
+    # Add bootstrap to project
+    $ cd todo
+    $ npm install bootstrap@4.1.2
