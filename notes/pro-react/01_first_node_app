@@ -1,0 +1,44 @@
+-----------------------------------------------------------
+CHAPTER 1 - FIRST REACT APPLICATION
+-----------------------------------------------------------
+
+- Node 
+
+    - Node was created in 2009 as an application runtime for server-side applications 
+        written in JavaScript.  It's based on the JS engine used in the Chrome browser.
+
+      While it has had success as an application server, it has also provided the foundation of
+        a new generation of development and build tools.
+
+        # Get Node Version
+        $ node -v
+
+        # Get npm Version
+        $ npm -v
+
+
+
+- The create-react-app Package
+
+    - The create-react-app package is the standard way to create and manage complex React
+        packages.  It provides a complete development toolchain.
+
+        # Install create-react-app
+        $ npm install --global create-react-app@2.1.2
+
+
+
+- The react-devtools Browser Extension
+
+    - The react-devtools browser extension, available in Firefox and Chrome, is very useful,
+        especially when working on complex projects.
+
+
+
+- Creating the Project
+
+    - The 'npx' command is installed as part of node.  It is used to round out the experience
+        of using packages from the npm registry.
+
+        # Create new react app
+        $ npx create-react-app todo
