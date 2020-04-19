@@ -152,6 +152,47 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
 - Displaying Dynamic Content
 
+    - React makes displaying dynamic content easy with the 'expressions' feature.  An
+        expression is a fragment of JS that is evaluated when a component's 'render'
+        method is called.
+
+      Many expressions are also used to display data values defined by the component to
+        keep track of the state of the application, known as 'state data'.  Expressions
+        are denoted with curly braces.
+
+
+        import React, { Component } from 'react';
+
+        export default class App extends Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    userName: "Adam"
+                }
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h4 className="bg-primary text-white text-center p-2">
+                            { this.state.userName }'s To Do List
+                        </h4>
+                    </div>
+                )
+            };
+        }
+
+
+    - The 'props' parameter is important, because it allows one React component to 
+        configure another.  
+
+
+    - React components have a special property named 'state' which is used to define state
+        data.  
+
+
+
 - Understanding State Data Changes
 
 - Adding the To-Do Application Features
