@@ -97,3 +97,71 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
         # Add after other import statements in todo/src/index.js
         import 'bootstrap/dist/css/bootstrap.css';
+
+
+
+- Starting the Development Tools
+
+    - The 'npm start' command will compile the project, package it up, and deliver it to the
+        browser.
+
+        # Start app
+        $ npm start
+
+
+
+- Replacing the Placeholder Context
+
+    - We'll change the default placeholder content to just display a title bar for our new
+        application.
+
+        # File: src/App.js
+        import React, { Component } from 'react';
+        import logo from './logo.svg';
+        import './App.css';
+        
+        export default class App extends Component {
+            render() {
+                return (
+                    <div>
+                        <h4 className="bg-primary text-white text-center p-2">
+                            To Do List
+                        </h4>
+                    </div>
+                )
+            };
+        }
+
+
+    - Here, the 'App.js' file contains a React component named 'App'.  Components are the main
+        building block for React applications.
+
+      Components are written using JSX, a superset of JavaScript that allows HTML to be 
+        included in files without any special quoting.
+
+
+    - Note that JSX can be a little strange at first glance.  For instance, since the JSX files
+        are actually JavaScript, and 'class' is a keyword in modern JavaScript, we cannot use
+        it for CSS classes.  Here, we use 'className' instead.
+
+        <h4 className="bg-primary text-white text-center p-2">
+            To Do List
+        </h4>
+
+
+
+- Displaying Dynamic Content
+
+- Understanding State Data Changes
+
+- Adding the To-Do Application Features
+
+- Displaying the To-Do Items
+
+- Introducing Additional Components
+
+- Using the Child Components
+
+- Managing the Visibility of Completed Tasks
+
+- Persistently Storing Data
