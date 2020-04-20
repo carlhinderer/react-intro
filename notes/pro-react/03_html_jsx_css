@@ -48,7 +48,7 @@ CHAPTER 3 - HTML, JSX, and CSS
         # File: src/App.js
 
         import React, { Component } from "react";
-        
+
         export default class App extends Component {
 
             render = () =>
@@ -58,22 +58,88 @@ CHAPTER 3 - HTML, JSX, and CSS
         }
 
 
+    - Now, we can run the example application.
 
-- Running the Example Application
+        $ npm start
+
+
 
 - Understanding the HTML and DOM Elements
 
-- Understanding Element Content
+    - Common HTML Elements:
 
-- Understanding Attributes
+        a
+        button
+        div
+        h1-h6
+        input
+        table, tbody, thead, tr, th, td
+
+
 
 - Creating HTML Elements Dynamically
 
+    - HTML elements can be dynamically created using JavaScript and the DOM API that all
+        modern browsers support.
+
+        <body>
+          <h4 class="bg-primary text-white text-center p-2 m-1">
+            Static HTML Element
+          </h4>
+
+          <script>
+            let element = document.createElement("h4");
+            element.className = "bg-primary text-white text-center p-2 m-1";
+            element.textContent = "DOM API HTML Element";
+            document.getElementById("domParent").appendChild(element);
+          </script>
+        </body>
+
+
+
 - Creating Elements Dynamically Using a React Component
+
+    - The 'render' method in App.js combines aspects of static and dynamic HTML.
+
+        export default class App extends Component {
+            render = () =>
+                <h4 className="bg-primary text-white text-center p-2 m-1">
+                    Component Element
+                </h4>
+        }
+
+
 
 - Using Expressions in React Elements
 
+    - The ability to use expressions to configure elements is one of the key features of
+        React and JSX.  Expressions are denoted by { curly braces }.
+
+         const message = "This is a constant";
+
+         export default class App extends Component {
+             render = () =>
+                 <h4 className="bg-primary text-white text-center p-2 m-1">
+                     { message }
+                 </h4>
+         }
+
+
+
 - Mixing Expressions and Static Content
+
+    - Static content and expressions can be mixed together.
+
+         const count = 4;
+
+         export default class App extends Component {
+             render = () =>
+                 <h4 className="bg-primary text-white text-center p-2 m-1">
+                     Number of things: { count }
+                 </h4>
+         }
+
+
 
 - Performing Computation in Expressions
 
