@@ -395,7 +395,7 @@ CHAPTER 1 - FIRST REACT APPLICATION
                 this.props.callback(this.state.newItemText);
                 this.setState({ newItemText: ""});
             }
-            
+
             render = () =>
                 <div className="my-1">
                     <input className="form-control" value={ this.state.newItemText }
@@ -408,6 +408,71 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
 
 - Using the Child Components
+
+    - Now, we use the components we defined in the previous section.
+
+        # File: src/App.js
+
+        import React, { Component } from 'react';
+        import { TodoBanner } from "./TodoBanner";
+        import { TodoCreator } from "./TodoCreator";
+        import { TodoRow } from "./TodoRow";
+
+        export default class App extends Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    userName: "Adam",
+                    todoItems: [{ action: "Buy Flowers", done: false },
+                                { action: "Get Shoes", done: false },
+                                { action: "Collect Tickets", done: true },
+                                { action: "Call Joe", done: false }],
+                    //newItemText: ""
+                }
+            }
+
+            updateNewTextValue = (event) => {
+                this.setState({ newItemText: event.target.value });
+            }
+
+            createNewTodo = (task) => {
+                if (!this.state.todoItems.find(item => item.action === task)) {
+                    this.setState({
+                        todoItems: [...this.state.todoItems, { action: task, done: false }]
+                    });
+                }
+            }
+
+            toggleTodo = (todo) => this.setState({ todoItems:
+                this.state.todoItems.map(item => item.action === todo.action
+                    ? { ...item, done: !item.done } : item) });
+
+            todoTableRows = () => this.state.todoItems.map(item =>
+                <TodoRow key={ item.action } item={ item } callback={ this.toggleTodo } />)
+
+            render = () =>
+                <div>
+                    <TodoBanner name={ this.state.userName } tasks={this.state.todoItems } />
+                    <div className="container-fluid">
+                        <TodoCreator callback={ this.createNewTodo } />
+                        <table className="table table-striped table-bordered">
+                            <thead>
+                                <tr><th>Description</th><th>Done</th></tr>
+                            </thead>
+                            <tbody>{ this.todoTableRows() }</tbody>
+                        </table>
+                    </div>
+                </div>
+        }
+
+
+    - Here, we can see the syntax of using a child component, and passing the 'item' argument 
+        to the TodoRow component.
+
+        <TodoRow key={ item.action } item={ item } callback={ this.toggleTodo } />)
+
+
 
 - Managing the Visibility of Completed Tasks
 
