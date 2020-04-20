@@ -1,0 +1,57 @@
+-----------------------------------------------------------
+CHAPTER 3 - HTML, JSX, and CSS
+-----------------------------------------------------------
+
+- Creating Project
+
+    - Create the project.
+
+        # Create project
+        $ npx create-react-app primer
+
+
+    - Add bootstrap.
+
+        # Add bootstrap
+        $ cd primer
+        $ npm install bootstrap
+
+        # Add to index.js
+        import 'bootstrap/dist/css/bootstrap.css';
+
+
+- Preparing the HTML File and Component
+
+- Running the Example Application
+
+- Understanding the HTML and DOM Elements
+
+- Understanding Element Content
+
+- Understanding Attributes
+
+- Creating HTML Elements Dynamically
+
+- Creating Elements Dynamically Using a React Component
+
+- Using Expressions in React Elements
+
+- Mixing Expressions and Static Content
+
+- Performing Computation in Expressions
+
+- Accessing Component Properties and Methods
+
+- Using Expressions to Set Prop Values
+
+- Using Expressions to Handle Events
+
+- Understanding Bootstrap
+
+- Applying Basic Bootstrap Classes
+
+- Using Bootstrap to Create Grids
+
+- Using Bootstrap to Style Tables
+
+- Using Bootstrap to Style Forms
