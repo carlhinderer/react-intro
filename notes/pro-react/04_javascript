@@ -1,0 +1,78 @@
+-----------------------------------------------------------
+CHAPTER 4 - JAVASCRIPT
+-----------------------------------------------------------
+
+- Creating Project
+
+- Using Statements
+
+- Defining and Using Functions
+
+- Using Default and Rest Parameters
+
+- Defining Functions That Return Results
+
+- Using Functions as Arguments to Other Functions
+
+- Using Arrow Functions
+
+- Using Variables and Types
+
+- Using Variable Closure
+
+- Using the Primitive Types
+
+    - Booleans
+    - Strings
+    - Template Strings
+    - Numbers
+
+- Operators
+
+- Conditionals
+
+- The Equality and Identity Operators
+
+- Explicitly Converting Types
+
+- Working With Arrays
+
+- Reading and Modifying Arrays
+
+- Enumerating the Contents of an Array
+
+- Using the Spread Operator
+
+- Using the Built-in Array Methods
+
+- Working With Objects
+
+- Using Object Literals
+
+- Using Variables as Object Properties
+
+- Using Functions as Methods
+
+- Using Classes
+
+- Copying Properties From One Object to Another
+
+- Capturing Parameter Names From Objects
+
+- Creating and Using a JavaScript Module
+
+- Understanding Module Locations
+
+- Exporting Named Features From a Module
+
+- Defining Multiple Named Features in a Module
+
+- Changing Module Feature Names
+
+- Importing an Entire Module
+
+- Understanding the Asynchronous Operation Problem
+
+- Using a JavaScript Promise
+
+- 
