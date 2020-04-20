@@ -1,0 +1,90 @@
+-----------------------------------------------------------
+CHAPTER 2 - UNDERSTANDING REACT
+-----------------------------------------------------------
+
+- React Considerations
+
+    - Each time a React application is loaded, a lot happens.  All this work takes time to 
+        perform, and the amount of time it takes depends on the browser and the environment.
+
+      Particularly, old browsers on underpowered smartphones can take a long time to load a
+        React app.  
+
+
+
+- Understanding Round-Trip Applications
+
+    - For a long time, web apps were developed to follow a round-trip model.
+
+        1. The browser requetss an initial HTML document from the server.
+
+        2. User interactions, like clicking a link or submitting a form, leads the browser to
+             request and receive a completely new HTML document.  
+
+
+    - In this kind of application, the browser is essentially a rendering engine for HTML 
+        content.  All of the data and application logic resides on the server.
+
+      The browser makes a series of stateless HTTP requests that the server handles by 
+        generating HTML documents dynamically.
+
+
+    - A lot of current web development is still for round-trip applications, because they
+        put few demands on the browser and have the widest possible client support.
+
+
+    - Drawbacks:
+
+        1. The user has to wait while the next HTML document is requested and loaded.
+
+        2. They require a large server-side infrastructure to process all the requests and
+             manage all the application state.
+
+        3. They require more bandwidth since every HTML document is self-contained, which can
+             lead to the same content being included in each response from the server.
+
+
+
+- Understanding Single-Page Applications
+
+    - With the SPA approach, an initial HTML document is sent to the browser, then user
+        interactions lead to HTTP requests for small fragments of data or HTML.
+
+      The initial HTML document is never loaded or replaced, and the user can continue to
+        interact with it while HTTP requests are being performed asynchronously.
+
+
+
+- React vs Vue.js and Angular
+
+    - All 3 of these frameworks can be used to create rich and fluid client-side 
+        applications.  The main differences between them relate to developer experience.
+
+
+    - Angular requires TypeScript to be effective, while it is just an option for React and
+        Vue projects.
+
+
+    - React and Vue both mix HTML and JS together in a single file.
+
+
+
+- Understanding Application Complexity
+
+    - A framework like React takes a large time commitment to master, and this effort just 
+        isn't justified if you just need to validate a form or populate a select element.
+
+
+    - It is often forgotten that browsers provide rich APIs, which is what React relies on for
+        all of it's features.  If your problem is simple and self-contained, you should look
+        at the browser APIs directly, starting with the DOM API.
+
+
+    - One drawback of working directly with browser APIs is that they tend to be awkward and
+        not cross-compabible.  The jQuery library was created to help abstract these issues,
+        and is still widely used and useful.
+
+
+    - Reach comes into it's own in large applications, where there are complex workflows to 
+        implement, different types of users, and substantial volumes of data.  In these
+        situations, a framework like React makes scaling the application up much easier.
