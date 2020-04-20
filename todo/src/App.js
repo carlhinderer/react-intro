@@ -26,7 +26,7 @@ export default class App extends Component {
         if (!this.state.todoItems.find(item => item.action === task)) {
             this.setState({
                 todoItems: [...this.state.todoItems, { action: task, done: false }]
-            });
+            }, () => localStorage.setItem("todos", JSON.stringify(this.state)));
         }
     }
 
@@ -38,6 +38,20 @@ export default class App extends Component {
         .filter(item => item.done === doneValue).map(item =>
             <TodoRow key={ item.action } item={ item }
                   callback={ this.toggleTodo } />)
+
+    componentDidMount = () => {
+        let data = localStorage.getItem("todos");
+        this.setState(data != null
+            ? JSON.parse(data)
+            :  {
+                userName: "Adam",
+                todoItems: [{ action: "Buy Flowers", done: false },
+                            { action: "Get Shoes", done: false },
+                            { action: "Collect Tickets", done: true },
+                            { action: "Call Joe", done: false }],
+                showCompleted: true
+            });
+    }
         
     render = () =>
         <div>

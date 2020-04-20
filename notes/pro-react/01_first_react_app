@@ -524,7 +524,7 @@ CHAPTER 1 - FIRST REACT APPLICATION
                 .filter(item => item.done === doneValue).map(item =>
                     <TodoRow key={ item.action } item={ item }
                           callback={ this.toggleTodo } />)
-                          
+
             render = () =>
                 <div>
                     <TodoBanner name={ this.state.userName }
@@ -558,3 +558,40 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
 
 - Persistently Storing Data
+
+    - Our final change is to store the data so a user's list is preserved after navigating
+        away from the application.  For this example, we keep it simple and store the data
+        using the LocalStorage API.
+
+
+    - Here, we update our App.js component:
+
+        # File: src/App.js
+
+        createNewTodo = (task) => {
+            if (!this.state.todoItems.find(item => item.action === task)) {
+                this.setState({
+                    todoItems: [...this.state.todoItems, { action: task, done: false }]
+                }, () => localStorage.setItem("todos", JSON.stringify(this.state)));
+            }
+        }
+
+        componentDidMount = () => {
+            let data = localStorage.getItem("todos");
+            this.setState(data != null
+                ? JSON.parse(data)
+                :  {
+                    userName: "Adam",
+                    todoItems: [{ action: "Buy Flowers", done: false },
+                                { action: "Get Shoes", done: false },
+                                { action: "Collect Tickets", done: true },
+                                { action: "Call Joe", done: false }],
+                    showCompleted: true
+                });
+        }
+
+
+    - The Local Storage API is accessed through the 'localStorage' object, and the component
+        uses the 'setItem' method to store to-do items when a new to-do item is created.
+
+      We use the 'getItem' method to retrieve items stored in local storage.
