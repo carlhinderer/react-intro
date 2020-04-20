@@ -20,7 +20,29 @@ CHAPTER 3 - HTML, JSX, and CSS
         import 'bootstrap/dist/css/bootstrap.css';
 
 
+
 - Preparing the HTML File and Component
+
+    - Replace the 'index.html' file.
+
+        # File: public/index.html
+
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <title>Primer</title>
+          </head>
+          <body>
+            <h4 class="bg-primary text-white text-center p-2 m-1">
+                Static HTML Element
+            </h4>
+            <div id="domParent"></div>
+            <div id="root"></div>
+          </body>
+        </html>
+
+
 
 - Running the Example Application
 
