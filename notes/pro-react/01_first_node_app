@@ -293,7 +293,67 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
 - Displaying the To-Do Items
 
+    - Now, we'll display list of to-do items.
+
+            toggleTodo = (todo) => this.setState({ todoItems:
+                this.state.todoItems.map(item => item.action === todo.action
+                    ? { ...item, done: !item.done } : item) });
+
+            todoTableRows = () => this.state.todoItems.map(item =>
+                <tr key={ item.action }>
+                    <td>{ item.action }</td>
+                    <td>
+                        <input type="checkbox" checked={ item.done }
+                            onChange={ () => this.toggleTodo(item) } />
+                    </td>
+                </tr> );
+
+            render = () =>
+                <div>
+                    <h4 className="bg-primary text-white text-center p-2">
+                        {this.state.userName}'s To Do List
+                        ({ this.state.todoItems.filter(t => !t.done).length} items to do)
+                    </h4>
+                    <div className="container-fluid">
+                        <div className="my-1">
+                            <input className="form-control"
+                                value={ this.state.newItemText }
+                                onChange={ this.updateNewTextValue } />
+                            <button className="btn btn-primary mt-1"
+                                onClick={ this.createNewTodo }>Add</button>
+                        </div>
+                        <table className="table table-striped table-bordered">
+                            <thead>
+                                <tr><th>Description</th><th>Done</th></tr>
+                            </thead>
+                            <tbody>{ this.todoTableRows() }</tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
 - Introducing Additional Components
+
+    - To help keep components manageable, functionality is delegated to separate components
+        responsible for specific features.  These are known as 'child components', while the
+        component that delegated the functionality is the 'parent component'.
+
+
+    - First, we'll add a new component for the banner:
+
+        # File: src/TodoBanner.js
+
+        import React, { Component } from 'react';
+        export class TodoBanner extends Component {
+            render = () =>
+                <h4 className="bg-primary text-white text-center p-2">
+                    { this.props.name }'s To Do List
+                    ({ this.props.tasks.filter(t => !t.done).length } items to do)
+                </h4>
+        }
+
+
 
 - Using the Child Components
 
