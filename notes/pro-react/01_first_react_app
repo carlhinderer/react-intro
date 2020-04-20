@@ -476,7 +476,28 @@ CHAPTER 1 - FIRST REACT APPLICATION
 
 - Managing the Visibility of Completed Tasks
 
-    - 
+    - At the moment, tasks always remain visible, even when they are completed.  To address
+        this, we'll create separate lists of completed and incomplete tasks.  We'll allow 
+        the incomplete tasks to be hidden.
+
+
+    - First, we'll add the checkbox that controls whether the completed tasks are visible.
+
+        # File: src/VisibilityControl.js
+
+        import React, { Component } from 'react';
+
+        export class VisibilityControl extends Component {
+            render = () =>
+                <div className="form-check">
+                    <input className="form-check-input" type="checkbox"
+                        checked={ this.props.isChecked }
+                        onChange={ (e) => this.props.callback(e.target.checked) } />
+                    <label className="form-check-label">
+                        Show { this.props.description }
+                    </label>
+                </div>
+        }
 
 
 
