@@ -4,9 +4,62 @@ CHAPTER 4 - JAVASCRIPT
 
 - Creating Project
 
+    - JavaScript has been modernized in recent years with the addition of new language
+        features and utility functions.  
+
+      Since not all browsers support the latest features, React includes the Babel package,
+        which will translate these features into code that will work in most mainstream
+        browsers.
+
+
+    - We'll keep using the 'primer' project from Chapter 3.  First, we'll create a new file
+        for testing things out.
+
+        # File: src/example.js
+        console.log("Hello");
+
+
+    - And, we'll need to add our new file to incorporate it into the application.
+
+        # Add to src/index.js after other imports
+        import "./example";
+
+
+    - Start the application.
+
+        $ npm start
+
+      Now, open the Developer Tools in your web browser, and should see the 'Hello' printed.
+
+
+
 - Using Statements
 
+    - Statement-terminating semicolons are optional, but adding them makes code more readable
+        and allows multiple statements on a single line.
+
+
+
 - Defining and Using Functions
+
+    - To define a function:
+
+        const myFunc = function () {
+            console.log('Inside the function.');
+        }
+
+        myFunc();
+
+
+    - Define a function without explicitly defining a variable.
+
+        function myFunc() {
+            console.log('Inside the function');
+        }
+
+        myFunc();
+
+
 
 - Using Default and Rest Parameters
 

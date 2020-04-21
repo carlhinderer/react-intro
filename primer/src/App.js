@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 
-const message = "Component Element";
-
 export default class App extends Component {
 
     constructor(props) {
