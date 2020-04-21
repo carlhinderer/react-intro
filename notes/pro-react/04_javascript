@@ -61,13 +61,97 @@ CHAPTER 4 - JAVASCRIPT
 
 
 
-- Using Default and Rest Parameters
+- Defining Functions With Parameters
+
+    - To define parameters for functions:
+
+        function myFunc(name, weather) {
+            console.log("Hello " + name + ".");
+            console.log("It is " + weather + " today.");
+        }
+
+        myFunc("Adam", "sunny");
+
+
+    - If you call the function with fewer arguments than it has parameters, the values of
+        parameters not passed is 'undefined'.  If you call the function with extra arguments, 
+        they are ignored.
+
+      To add default values for parameters,
+
+        function myFunc(name, weather = "raining") {
+            console.log("Hello " + name + ".");
+            console.log("It is " + weather + " today.");
+        }
+
+        myFunc("Adam"); 
+
+
+    - 'Rest parameters' are used to capture any additional arguments when a function is invoked
+        with additional arguments.
+
+        function myFunc(name, weather, ...extraArgs) {
+            console.log("Hello " + name + ".");
+            console.log("It is " + weather + " today.");
+            for (let i = 0; i < extraArgs.length; i++) {
+                console.log("Extra Arg: " + extraArgs[i]);
+            }
+        }
+
+        myFunc("Adam", "sunny", "one", "two", "three");
+
+
 
 - Defining Functions That Return Results
 
+    - The 'return' keyword is used to return results.  If no return statement is included, 
+        'undefined' is returned from the function.
+
+         function myFunc(name) {
+             return ("Hello " + name + ".");
+         }
+
+         console.log(myFunc("Adam")); 
+
+
+
 - Using Functions as Arguments to Other Functions
 
+    - JavaScript functions can be treated as objects, which means one function can be
+        used as an argument to another.
+
+        function myFunc(nameFunction) {
+            return ("Hello " + nameFunction() + ".");
+        }
+
+        function printName(nameFunction, printFunction) {
+            printFunction(myFunc(nameFunction));
+        }
+
+        printName(function () { return "Adam" }, console.log);
+
+
+
 - Using Arrow Functions
+
+    - Arrow functions (aka 'fat arrow functions' or 'lambda expressions') are another way
+        to define functions, usually functions that are arguments to other functions.
+
+        const myFunc = (nameFunction) => ("Hello " + nameFunction() + ".");
+
+        const printName = (nameFunction, printFunction) =>
+            printFunction(myFunc(nameFunction));
+
+        printName(function () { return "Adam" }, console.log);
+
+
+    - The input parameters are in the parentheses, and the result of the statement after the arrow
+        is returned from the function.
+
+      The 'return' keyword and {} are only required if the arrow function needs to execute more
+        than one statement.
+
+
 
 - Using Variables and Types
 
