@@ -39,6 +39,9 @@ CHAPTER 4 - JAVASCRIPT
         and allows multiple statements on a single line.
 
 
+    - Syntax warnings received when a React project is built come from the 'ESLint' package.
+
+
 
 - Defining and Using Functions
 
@@ -155,13 +158,87 @@ CHAPTER 4 - JAVASCRIPT
 
 - Using Variables and Types
 
+    - The 'let' statement is used to declare variables that can change.
+      The 'const' statement is used to create constants that cannot be modified.
+
+      The 'var' statement is now deprecated, but still often used.
+
+
+    - For an illustration of why the 'let' keyword was introduced to replace 'var',
+
+        1. Use let, which has block scope.
+
+             function messageFunction(name, weather) {
+                 let message = "Hello, Adam";
+                 if (weather === "sunny") {
+                     let message = "It is a nice day";
+                     console.log(message);
+                 } else {
+                     let message = "It is " + weather + " today";
+                     console.log(message);
+                 }
+                 console.log(message);
+             }
+
+             messageFunction("Adam", "raining");
+
+             # Results
+             It is raining today
+             Hello, Adam
+
+
+        2. Use var, which scopes variables to the containing function.  This leads to some very
+             confusing bugs, even for experienced JavaScript developers.
+
+             function messageFunction(name, weather) {
+                 var message = "Hello, Adam";
+                 if (weather === "sunny") {
+                     var message = "It is a nice day";
+                     console.log(message);
+                 } else {
+                     var message = "It is " + weather + " today";
+                     console.log(message);
+                 }
+                 console.log(message);
+             }
+
+             messageFunction("Adam", "raining");
+             
+             # Results
+             It is raining today
+             It is raining today
+
+
+
 - Using Variable Closure
+
+    - If you define a function inside of another function, then the inner function is able to 
+        access the outer function's variables.  This feature is called a 'closure'.
+
+        function myFunc(name) {
+            let myLocalVar = "sunny";
+            let innerFunction = function () {
+                return ("Hello " + name + ". Today is " + myLocalVar + ".");
+            }
+            return innerFunction();
+        }
+
+        console.log(myFunc('Adam'));
+
+
+    - This is a powerful feature that means you don't have to define parameters on inner functions
+        to pass around data values, but caution is required.
+
+
 
 - Using the Primitive Types
 
     - Booleans
+
     - Strings
+
     - Template Strings
+    
     - Numbers
 
 - Operators
