@@ -219,7 +219,60 @@ CHAPTER 3 - HTML, JSX, and CSS
 
 - Understanding Bootstrap
 
+    - Bootstrap, originally developed at Twitter, is the most popular and widely used
+        CSS framework.
+
+      It is well-supported, works well across browsers, and is simple to use.
+
+
+
 - Applying Basic Bootstrap Classes
+
+    - Here is an example of bootstrap classes being used:
+
+        <h4 className="bg-primary text-white text-center p-2 m-1">
+
+        bg-primary   =  contextual class
+        text-white   =  text color in element is white
+        text-center  =  horizontally centers element's content
+        p-2          =  padding
+        m-1          =  margin
+
+
+    - Contextual classes apply styles to an item based on it's use.
+
+        Name           Description
+        -------------------------------------------------------------
+        primary        Indicates the main action or area of content
+
+        secondary      Indicates the supporting areas of content
+
+        success        Indicates a successful outcome
+
+        info           Presents additional information
+
+        warning        Presents warnings
+
+        danger         Presents serious warnings
+
+        muted          De-emphasizes content
+
+        dark           Increases contrast by using a dark color
+
+        white          Increases contrast by using white
+
+
+    - Padding and margins 
+
+        - can have a 't', 'b', 'r', or 'l' to specify side, if not present all sides are set
+        - can have a value from 0 (none) to 5 (most)
+
+        p-1
+        m-0
+        pt-5
+        ml-3
+
+
 
 - Using Bootstrap to Create Grids
 
