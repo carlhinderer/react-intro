@@ -883,4 +883,72 @@ CHAPTER 4 - JAVASCRIPT
 
 - Using a JavaScript Promise
 
+    - To solve the problem in the previous section, we need a mechanism that allows us to
+        observe the asynchronous task so that we can wait for it to complete and then 
+        write out the result.
+
+      This is the role of the JavaScript promise.
+
+
+    - Here, we rewrite our 'asyncAdd' using a promise instead.
+
+        import { sumValues } from "./sum";
+  
+        export function asyncAdd(values) {
+            return new Promise(callback =>
+                setTimeout(() => {
+                    let total = sumValues(values);
+                    console.log(`Async Total: ${total}`);
+                    callback(total);
+                }, 500));
+        }
+
+
+    - Here, the Promise constructor accepts a function that is to be observed.  The observed
+        function is provided with a callback that is invoked when the asynchronous task is
+        completed.  Invoking the callback is known as 'resolving the promise'.
+
+
+    - Now, we can call the function:
+
+        import { asyncAdd } from "./async";
+        let values = [10, 20, 30, 40, 50];
+
+        asyncAdd(values).then(total => console.log(`Main Total: ${total}`)); 
+
+
+        # Output
+        Async Total: 150
+        Main Total: 150
+
+
+
 - Simplifying the Asynchronous Code
+
+    - JavaScript provides 2 keywords, 'async' and 'await', which work the same as promises
+        but simplify the syntax.
+
+        import { asyncAdd } from "./async";
+        let values = [10, 20, 30, 40, 50];
+
+        async function doTask() {
+            let total = await asyncAdd(values);
+            console.log(`Main Total: ${total}`);
+        }
+
+        doTask();
+
+
+        # Output
+        Async Total: 150
+        Main Total: 150
+
+
+    - We add the separate 'doTask' function since the keywords can only be applied to 
+        functions.  
+
+      The 'async' keyword indicates that the function relies on a promise.
+
+      The 'await' keyword is used when calling a function that returns a promise, and has the
+        effect of assigning the result provided by the promise object's callback and then
+        executing the statements that follow.
