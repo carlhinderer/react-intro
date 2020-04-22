@@ -528,11 +528,82 @@ CHAPTER 4 - JAVASCRIPT
 
 - Working With Objects
 
+    - We can create objects using the 'new Object()' statement.
+
+        let myData = new Object();
+        myData.name = "Adam";
+        myData.weather = "sunny";
+
+        console.log(`Hello ${myData.name}.`);
+        console.log(`Today is ${myData.weather}.`);
+
+
+
 - Using Object Literals
+
+    - The standard way to define objects is to use object literal format.
+
+        let myData = {
+            name: "Adam",
+            weather: "sunny"
+        };
+
+        console.log(`Hello ${myData.name}.`);
+        console.log(`Today is ${myData.weather}.`);
+
+
 
 - Using Variables as Object Properties
 
+    - If you use a variable name as an object property, the variable name will be the
+        property name, and the variable value will be the property value.
+
+         let name = "Adam"
+
+         let myData = {
+           name,
+           weather: "sunny"
+         };
+
+         console.log(`Hello ${myData.name}.`);
+         console.log(`Today is ${myData.weather}.`);
+
+
+
 - Using Functions as Methods
+
+    - Functions can be added to objects, effectively creating methods.
+
+        let myData = {
+            name: "Adam",
+            weather: "sunny",
+            printMessages: function () {
+                console.log(`Hello ${myData.name}.`);
+                console.log(`Today is ${myData.weather}.`);
+            }
+        };
+
+        myData.printMessages(); 
+
+
+    - Fat arrow syntax can also be used.
+
+        let myData = {
+            name: "Adam",
+            weather: "sunny",
+            printMessages: () => {
+                console.log(`Hello ${myData.name}.`);
+                console.log(`Today is ${myData.weather}.`);
+            }
+        };
+
+
+    - Tip: If you return an object literal as a result of an arrow function, it must be
+        enclosed in parentheses.
+
+        myFunc: () => ({ data: "hello" })
+
+
 
 - Using Classes
 
