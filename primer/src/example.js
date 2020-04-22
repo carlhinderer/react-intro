@@ -1,3 +1,6 @@
+import { asyncAdd } from "./async";
+
+
 // Calling Functions
 console.log('Hello');
 
@@ -67,3 +70,10 @@ const printName2 = (nameFunction, printFunction) =>
     printFunction(myFunc6(nameFunction));
 
 printName2(function () { return "Adam" }, console.log);
+
+
+// Call Asynchronous Function
+let values = [10, 20, 30, 40, 50];
+let total = asyncAdd(values);
+
+console.log(`Main Total: ${total}`); 

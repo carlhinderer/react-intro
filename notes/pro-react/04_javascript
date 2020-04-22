@@ -799,14 +799,87 @@ CHAPTER 4 - JAVASCRIPT
       Here, 'React' is the default export, and 'Component' is a named feature.
 
 
+    - Modules can contain more than one named feature.
 
-- Defining Multiple Named Features in a Module
+        import { multiply, subtract } from './operations';
+
+
 
 - Changing Module Feature Names
 
+    - We can use the 'as' keyword to change the name of a named feature we import.
+
+        import { multiply, subtract as deduct } from "./operations";
+
+        console.log(`Subtract: ${deduct(1000, values)}`); 
+
+
+
 - Importing an Entire Module
 
+    - Sometimes, we need so many features from a module, that we just import all of them.
+
+        import * as ops from "./operations";
+
+        console.log(`Multiply: ${ops.multiply(values)}`);
+        console.log(`Subtract: ${ops.subtract(1000, values)}`);
+
+
+
 - Understanding the Asynchronous Operation Problem
+
+    - A promise is a background activity that will be completed at some point in the future.
+        
+      The most common use for promises is requesting data using an HTTP request, which is
+        performed asynchronously and produces a result when a response is received from the
+        web server.
+
+
+    - Here, we have a simple asynchronous function:
+
+        # File: src/async.js
+
+        import { sumValues } from "./sum";
+
+        export function asyncAdd(values) {
+            setTimeout(() => {
+                let total = sumValues(values);
+                console.log(`Async Total: ${total}`);
+                return total;
+            }, 500);
+        }
+
+
+    - The 'setTimeout' function invokes a function asynchronously after a specified delay.  
+
+      The 'asyncAdd' function receives a parameter that is passed to the 'sumValues' function
+        after a delay of 500 milliseconds.
+
+
+    - Now, we call the function from our 'example.js':
+
+        # Call the function
+        import { asyncAdd } from "./async";
+
+        let values = [10, 20, 30, 40, 50];
+        let total = asyncAdd(values);
+
+        console.log(`Main Total: ${total}`); 
+
+        # Output
+        Main Total: undefined
+        Async Total: 150
+
+
+    - As we can see, the result from the 'asyncAdd' function isn't produced until all the
+        statements are executed.
+
+        Main Total: undefined
+        Async Total: 150
+
+      This is a commmon error when dealing with asynchronous programming.
+
+
 
 - Using a JavaScript Promise
 
