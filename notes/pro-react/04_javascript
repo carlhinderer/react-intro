@@ -333,13 +333,88 @@ CHAPTER 4 - JAVASCRIPT
 
 - The Equality and Identity Operators
 
+    - The equality operator == will automatically attempt type conversion.
+
+        let firstVal = 5;
+        let secondVal = "5";
+
+        if (firstVal == secondVal) {
+            console.log("They are the same");
+        } else {
+            console.log("They are NOT the same");
+        }
+
+        # Output
+        They are the same
+
+
+    - The identity operator === will not attempt type conversion.
+
+        if (firstVal === secondVal) {
+            console.log("They are the same");
+        } else {
+            console.log("They are NOT the same");
+        }
+
+        # Output
+        They are NOT the same
+
+
+
 - Explicitly Converting Types
 
-- Working With Arrays
+    - The 'toString()' method can be used to convert numbers to strings.  The 'String'
+        function can also be used.
 
-- Reading and Modifying Arrays
+        let myData = (5).toString() + String(5);
+        console.log(myData);
 
-- Enumerating the Contents of an Array
+        # Output 55
+
+
+    - The 'Number', 'parseInt', and 'parseFloat' functions can be used to conver strings
+        to numbers.
+
+        let a = Number("5);
+        let b = parseInt("10");
+        let c = parseFloat("15.25");
+
+
+
+- Working With Arrays 
+
+    - Create and populate an array:
+
+        let myArray = new Array();
+        myArray[0] = 100;
+        myArray[1] = "Adam";
+        myArray[2] = true;
+
+
+    - Use an array literal:
+
+        let myArray = [100, "Adam", true];
+
+
+    - Read and write from array:
+
+        myArray[0]
+        myArray[0] = "Tuesday";
+
+
+    - Enumerating the contents of the array:
+
+        let myArray = [100, "Adam", true];
+
+        # Enumerate with iterator
+        for (let i = 0; i < myArray.length; i++) {
+            console.log(`Index ${i}: ${myArray[i]}`);
+        }
+
+        # Enumerate with forEach method
+        myArray.forEach((value, index) => console.log(`Index ${index}: ${value}`));
+
+
 
 - Using the Spread Operator
 
