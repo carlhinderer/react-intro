@@ -607,9 +607,104 @@ CHAPTER 4 - JAVASCRIPT
 
 - Using Classes
 
+    - Classes are a recent addition to JavaScript.  They are used in React to define 
+        components that have state data.
+
+         class MyData {
+             constructor() {
+                 this.name = "Adam";
+                 this.weather = "sunny";
+             }
+             printMessages = () => {
+                 console.log(`Hello ${this.name}.`);
+                 console.log(`Today is ${this.weather}.`);
+             }
+         }
+
+         let myData = new MyData();
+         myData.printMessages();
+
+
+    - React development does not use inheritance directly.  It uses composition to create
+        complex features instead.  
+
+      The exception to this rule is when a React component is defined using a class.  In
+        this case, 'extends' is used to ensure the right features are available in the new
+        component.
+
+        import React, { Component } from "react";
+
+        export default class App extends Component {
+            render = () =>
+                <div className="m-2">
+                    <div className="form-group">
+                        <label>Name:</label>
+                        <input className="form-control" />
+                    </div>
+                    <div className="form-group">
+                        <label>City:</label>
+                        <input className="form-control" />
+                    </div>
+                </div>
+        }
+
+
+
 - Copying Properties From One Object to Another
 
+    - Some important features in React rely on copying the properties from one object
+        to another.
+
+        let myData = new MyData();
+        let secondObject = {};
+
+        Object.assign(secondObject, myData);
+
+        secondObject.printMessages();
+
+
+    - The spread operator can also be used to copy object properties.
+
+        let myData = new MyData();
+        let secondObject = { ...myData, weather: "cloudy"};
+
+        console.log(`myData: ${ myData.weather}, secondObject: ${secondObject.weather}`); 
+
+
+
 - Capturing Parameter Names From Objects
+
+    - When an object is received as a parameter, accessing the properties in it can be 
+        verbose.  For instance:
+
+        const myData = {
+            name: "Bob",
+            location: {
+                city: "Paris",
+                country: "France"
+            },
+            employment: {
+                title: "Manager",
+                dept: "Sales"
+            }
+        }
+
+        function printDetails(data) {
+            console.log(`Name: ${data.name}, City: ${data.location.city},
+                Role: ${data.employment.title}`);
+        }
+
+        printDetails(myData);
+
+
+    - We can accomplish the same thing more elegantly by capturing specific properties as
+        named parameters.
+
+        function printDetails({ name, location: { city }, employment: { title }}) {
+            console.log(`Name: ${name}, City: ${city}, Role: ${title}`);
+        }
+
+
 
 - Creating and Using a JavaScript Module
 
