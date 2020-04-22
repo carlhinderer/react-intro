@@ -708,9 +708,97 @@ CHAPTER 4 - JAVASCRIPT
 
 - Creating and Using a JavaScript Module
 
+    - To break applications up into managable chunks, JavaScript supports modules.
+
+        # File: src/sum.js
+
+        export default function(values) {
+            return values.reduce((total, val) => total + val, 0);
+        }
+
+      
+    - The 'sum.js' file contains a function that accepts an array of values.  The function
+        is defined in it's own file.
+
+        'export'  = features will be available outside the module
+        'default' = used when the module contains only a single function or other feature
+
+
+    - Now, we can use the function:
+
+        import additionFunction from "./sum";
+
+        let values = [10, 20, 30, 40, 50];
+        let total = additionFunction(values);
+
+        console.log(`Total: ${total}`);
+
+
+
 - Understanding Module Locations
 
+    - For modules we define ourselves, the relative paths are used, starting with 1 or 2
+        periods.
+
+        import additionFunction from "./sum";
+
+
+    - If we omit the initial period, the 'import' statement declares a dependency in 
+        node_modules, which is where the core React features are.
+
+
+
 - Exporting Named Features From a Module
+
+    - A module can assign names to the features it exports.
+
+        export function sumValues (values) {
+            return values.reduce((total, val) => total + val, 0);
+        }
+
+      Here, the 'default' keyword is no longer used.
+
+
+    - To use the named features:
+
+        import { sumValues } from "./sum";
+
+        let values = [10, 20, 30, 40, 50];
+        let total = sumValues(values);
+
+        console.log(`Total: ${total}`);
+
+
+
+    - A module can export both default and named features.
+
+        # File: sum.js
+        export function sumValues (values) {
+            return values.reduce((total, val) => total + val, 0);
+        }
+
+        export default function sumOdd(values) {
+            return sumValues(values.filter((item, index) => index % 2 === 0));
+        }
+
+
+        # Use default and named features
+        import oddOnly, { sumValues } from "./sum";
+
+        let values = [10, 20, 30, 40, 50];
+        let total = sumValues(values);
+        let odds = oddOnly(values);
+
+        console.log(`Total: ${total}, Odd Total: ${odds}`);
+
+
+    - In React components, we will often see the import:
+
+        import React, { Component } from "react";
+
+      Here, 'React' is the default export, and 'Component' is a named feature.
+
+
 
 - Defining Multiple Named Features in a Module
 
