@@ -235,15 +235,101 @@ CHAPTER 4 - JAVASCRIPT
 
     - Booleans
 
+        # Declare bools
+        let firstBool = true;
+        let secondBool = false;
+
+
     - Strings
 
+        # Declare strings
+        let firstString = "this is a string";
+        let secondString = "this is also a string";
+
+        # String length
+        firstString.length
+
+        # Common string methods
+        charAt(index)
+        concat(string)
+        indexOf(term, start)
+        replace(term, newTerm)
+        slice(start, end)
+        split(term)
+        toUpperCase()
+        toLowerCase()
+        trim() 
+
+
     - Template Strings
-    
+
+        # Template strings are between backticks
+        let message = `It is ${weather} today.`;
+
+
     - Numbers
+
+        # The number type is used to represent both int and floating point
+        let daysInWeek = 7;
+        let pi = 3.14;
+        let hexValue = 0xFFFF;
+
+
 
 - Operators
 
+    Operator                Description
+    ---------------------------------------------------------------------------------
+    ++, --                  Pre- or post-increment and decrement
+
+    +, -, *, /, %           Addition, subtraction, multiplication, division, remainder
+
+    <, <=, >, >=            Less than, less than or equal to, more than, more than or equal to
+
+    ==, !=                  Equality and inequality tests
+
+    ===, !==                Identity and nonidentity tests
+
+    &&, ||                  Logical AND and OR (|| is used to coalesce null values)
+
+    =                       Assignment
+
+    +                       String concatenation
+
+    ?:                      Three-operand conditional statement
+
+
+
 - Conditionals
+
+    - Here is an if/else statement:
+
+        let name = "Adam";
+
+        if (name === "Adam") {
+            console.log("Name is Adam");
+        } else if (name === "Jacqui") {
+            console.log("Name is Jacqui");
+        } else {
+            console.log("Name is neither Adam or Jacqui");
+        }
+
+
+    - Here is a switch/case:
+
+        switch (name) {
+            case "Adam":
+                console.log("Name is Adam");
+                break;
+            case "Jacqui":
+                console.log("Name is Jacqui");
+                break;
+            default:
+                console.log("Name is neither Adam or Jacqui");
+                break;
+        }
+
+
 
 - The Equality and Identity Operators
 
