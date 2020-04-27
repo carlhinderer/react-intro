@@ -1,0 +1,33 @@
+-----------------------------------------------------------
+CHAPTER 13 - RECONCILIATION & LIFECYCLES
+-----------------------------------------------------------
+
+- Starting the Project
+
+- Creating the Example Components
+
+- Understanding How Content is Rendered
+
+- Understanding the Update Process
+
+- Understanding the Reconciliation Process
+
+- Understanding List Reconciliation
+
+- Explicitly Triggering Reconciliation
+
+- Understanding the Component Lifecycle
+
+- Understanding the Mounting Phase
+
+- Understanding the Update Phase
+
+- Understanding the Unmounting Phase
+
+- Using the Effect Hook
+
+- Using the Advanced Lifecycle Methods
+
+- Preventing Unnecessary Component Updates
+
+- Setting State Data From Prop Values

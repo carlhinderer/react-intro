@@ -1,0 +1,47 @@
+-----------------------------------------------------------
+CHAPTER 14 - COMPOSING APPLICATIONS
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Creating the Example Components
+
+- Understanding the Basic Component Relationship
+
+- Using the Children Prop
+
+- Manipulating Prop Children
+
+- Adding Props to Container Children
+
+- Ordering or Omitting Components
+
+- Creating a Specialized Component
+
+- Creating Higher-Order Components
+
+- Creating Stateful Higher-Order Components
+
+- Combining Higher-Order Components
+
+- Using Render Props
+
+- Using a Render Prop with an Argument
+
+- Using Contexts for Global Data
+
+- Defining the Context
+
+- Creating the Context Consumer
+
+- Creating the Context Provider
+
+- Changing Context Data Values in a Consumer
+
+- Using the Simplified Context Consumer APIs
+
+- Consuming a Context Using Hooks
+
+- Defining Error Boundaries
+
+- Creating the Error Boundary Component

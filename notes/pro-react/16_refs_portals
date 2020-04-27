@@ -1,0 +1,23 @@
+-----------------------------------------------------------
+CHAPTER 16 - USING REFS & PORTALS
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Creating Refs
+
+- Using Refs to Create Uncontrolled Form Components
+
+- Creating Refs Using a Callback Function
+
+- Validating Uncontrolled Form Components
+
+- Understanding Refs and the Lifecycle
+
+- Using Refs with Other Libraries or Frameworks
+
+- Accessing a Child Component's Content
+
+- Using Ref Forwarding
+
+- Using Portals

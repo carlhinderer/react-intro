@@ -1,0 +1,39 @@
+-----------------------------------------------------------
+CHAPTER 15 - FORMS & VALIDATION
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Defining the Example Components
+
+- Starting the Development Tools
+
+- Using Form Elements
+
+- Using Select Elements
+
+- Using Select Elements That Present Multiple Items
+
+- Using Radio Buttons
+
+- Using Checkboxes
+
+- Using Checkboxes to Populate an Array
+
+- Using Text Areas
+
+- Validating Form Data
+
+- Defining the Validation Rules
+
+- Creating the Container Component
+
+- Displaying Validation Messages
+
+- Applying the Form Validation
+
+- Ensuring a Checkbox is Selected
+
+- Ensuring Matching Values
+
+- Performing Whole-Form Validation
