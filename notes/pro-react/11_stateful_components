@@ -1,0 +1,34 @@
+-----------------------------------------------------------
+CHAPTER 11 - STATEFUL COMPONENTS
+-----------------------------------------------------------
+
+- Creating the Application
+
+- Understanding Stateless Components
+
+- Understanding Stateful Components
+
+- Creating a Stateful Component
+
+    - Understanding the Component Class
+    - Understanding the Import Statement
+    - Understanding the Render Method
+    - Understanding Stateful Component Props
+
+- Adding State Data
+
+- Reading State Data
+
+- Modifying State Data
+
+- Avoiding the Dependent Value Pitfall
+
+- Avoiding the Missing Updates Pitfall
+
+- Defining Stateful Components Using Hooks
+
+- Lifting Up State Data
+
+- Lifting Up State Data Further
+
+- Defining Prop Types and Default Values

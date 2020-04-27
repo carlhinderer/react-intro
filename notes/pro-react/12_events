@@ -1,0 +1,35 @@
+-----------------------------------------------------------
+CHAPTER 12 - WORKING WITH EVENTS
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Understanding Events
+
+- Invoking a Method to Handle an Event
+
+- Avoiding the Event Function Invocation Pitfalls
+
+- Accessing Component Features in an Event Handling Method
+
+- Alternative Ways to Access Component Features
+
+- Receiving an Event Object
+
+- Differentiating Between Event Types
+
+- Avoiding the Event Reuse Pitfall
+
+- Invoking Event Handlers with a Custom Argument
+
+- Preventing Default Behavior
+
+- Managing Event Propogation
+
+- Understanding the Target and Bubble Phases
+
+- Understanding the Capture Phase
+
+- Determining the Event Phase
+
+- Stopping Event Propogation

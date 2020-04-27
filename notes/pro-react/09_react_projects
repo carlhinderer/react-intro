@@ -1,0 +1,37 @@
+-----------------------------------------------------------
+CHAPTER 9 - UNDERSTANDING REACT PROJECTS
+-----------------------------------------------------------
+
+- Creating the Application
+
+- Understanding the React Project Structure
+
+- Understanding the Source Code Folder
+
+- Understanding the Packages Folder
+
+- Using the React Development Tools
+
+- Understanding the JSX Transformation
+
+- Understanding the JavaScript Language Transformation
+
+- Understanding the Development HTTP Server
+
+- Understanding Static Content
+
+- Using the Public Folder for Static Content
+
+- Understanding the Error Display
+
+- Understanding the Linter
+
+- Disabling Linting for Individual Statements and Files
+
+- Configuring the Development Tools
+
+- Debugging React Applications
+
+- Exploring the Application State
+
+- Using the Debugger

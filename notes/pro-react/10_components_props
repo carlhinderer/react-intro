@@ -1,0 +1,41 @@
+-----------------------------------------------------------
+CHAPTER 10 - COMPONENTS & PROPS
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Understanding Components
+
+- Rendering HTML Content
+
+- Rendering Other Components
+
+- Defining Props in the Parent Component
+
+- Receiving Props in the Child Component
+
+- Selectively Rendering Content
+
+- Rendering Arrays
+
+- Using the Map Method to Process Array Objects
+
+- Adding the Key Prop
+
+- Rendering Multiple Elements
+
+- Rendering No Content
+
+- Attempting to Change Props
+
+- Using Function Props
+
+- Invoking Prop Functions with Arguments
+
+- Passing On Props to Child Components
+
+- Passing On All Props to Child Components
+
+- Providing Default Prop Values
+
+- Type Checking Prop Values
