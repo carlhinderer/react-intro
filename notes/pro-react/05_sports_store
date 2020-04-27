@@ -1,0 +1,35 @@
+-----------------------------------------------------------
+CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
+-----------------------------------------------------------
+
+- Starting the Project
+
+- Required Packages
+
+- Adding the CSS Stylesheets
+
+- Preparing the Web Service
+
+- Running the Example Application
+
+- Creating the Data Store
+
+- Creating the Data Store Actions and Action Creators
+
+- Creating the Shopping Features
+
+- Creating the Product and Category Components
+
+- Connecting to the Data Store and URL Router
+
+- Adding the Shop to the Application
+
+- Improving the Category Selection Buttons
+
+- Extending the Data Store to Add the Shopping Cart
+
+- Creating the Cart Summary Component
+
+- Adding the Cart Detail Component
+
+- Adding the Cart URL to the Routing Configuration

@@ -1,0 +1,39 @@
+-----------------------------------------------------------
+CHAPTER 8 - AUTHENTICATION & DEPLOYMENT
+-----------------------------------------------------------
+
+- New Routes
+
+- Auth Middleware
+
+- Adding Authentication for GraphQL Requests
+
+- Understanding the Authentication System
+
+- Creating the Authentication Context
+
+- Creating the Authentication Form
+
+- Guarding the Authentication Features
+
+- Adding a Navigation Link for the Administration Features
+
+- Enabling Lazy Loading for the Administration Features
+
+- Creating the Data File
+
+- Configuring the Request URLs
+
+- Building the Application
+
+- Creating the Application Server
+
+- Testing the Production Build and Server
+
+- Installing Docker
+
+- Preparing the Application
+
+- Creating the Docker Container
+
+- Running the Application

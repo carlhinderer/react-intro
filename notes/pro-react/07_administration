@@ -1,0 +1,31 @@
+-----------------------------------------------------------
+CHAPTER 7 - SPORTS STORE - ADMINISTRATION
+-----------------------------------------------------------
+
+- Generating Fake Orders
+
+- Running the Example Application
+
+- Creaing a GraphQL Service
+
+- Defining the GraphQL Schema
+
+- Defining the GraphQL Resolvers
+
+- Updating the Server
+
+- Defining the Order Table Component
+
+- Defining the Connector Component
+
+- Configuring the GraphQL Client
+
+- Configuring the Mutation
+
+- Creating the Product Administration Features
+
+- Creating the Product Table Component
+
+- Creating the Editor Components
+
+- Updating the Routing Configuration

@@ -1,0 +1,39 @@
+-----------------------------------------------------------
+CHAPTER 6 - SPORTS STORE - REST & CHECKOUT
+-----------------------------------------------------------
+
+- Consuming the RESTful Web Service
+
+- Creating a Config File
+
+- Creating a Data Source
+
+- Extending the Data Store
+
+- Updating the Action Creator
+
+- Paginating Data
+
+- Understanding the Web Service Pagination Support
+
+- Changing the HTTP Request and Action
+
+- Creating the Data Loading Component
+
+- Updating the Store Connector Component
+
+- Updating the All Category Button
+
+- Creating the Pagination Controls
+
+- Extending the Data Source and Data Store to Add the Checkout Process
+
+- Creating the Validated Checkout Form
+
+- Defining the Form
+
+- Creating the Thank You Component
+
+- Applying the New Components
+
+- Simplifying the Shop Connector Components
