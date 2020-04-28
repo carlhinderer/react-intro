@@ -1,0 +1,29 @@
+-----------------------------------------------------------
+CHAPTER 23 - CONSUMING A RESTFUL WEB SERVICE
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Preparing the Web Service
+
+- Adding a Component and a Route
+
+- Running the Web Service and the Example Application
+
+- Understanding RESTful Web Services
+
+- Consuming a Web Service
+
+    - Creating the Data Source Component
+    - Getting Data in the Component
+    - Saving, Updating, and Deleting Data
+    - Adding Application Support for Creating, Editing, and Deleting Data
+    - Dealing with Errors
+
+- Making Cross-Origin Requests
+
+- Consuming a Web Service with a Data Store
+
+    - Creating the New Middleware
+    - Adding the Middleware to the Data Store
+    - Completing the Application Changes

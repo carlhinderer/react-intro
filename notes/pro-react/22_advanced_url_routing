@@ -1,0 +1,36 @@
+-----------------------------------------------------------
+CHAPTER 22 - ADVANCED URL ROUTING
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Creating Route-Aware Components
+
+- Understanding the Match Prop
+
+- Understanding the Location Prop
+
+- Using URL Parameters
+
+- Using Optional URL Parameters
+
+- Accessing Routing Data Directly in a Component
+
+- Accessing Routing Data Using a Higher-Order Component
+
+- Navigating Programatically
+
+- Navigating Programatically Using Components
+
+- Prompting the User Before Navigation
+
+- Presenting a Custom Navigation Prompt
+
+- Generating Routes Programatically
+
+- Using Routing with Connecterd Data Store Components
+
+    - Replacing the Display Components
+    - Updating the Connected Editor Component
+    - Updating the Connected Table Component
+    - Completing the Routing Configuration

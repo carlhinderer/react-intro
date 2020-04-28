@@ -1,0 +1,27 @@
+-----------------------------------------------------------
+CHAPTER 24 - UNDERSTANDING GRAPHQL
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Understanding GraphQL
+
+- Creating the GraphQL Server
+
+    - Creating the Schema
+    - Creating the Resolvers
+    - Creating the Server
+
+- Making GraphQL Queries
+
+    - Getting Schema Details for GraphQL Services
+    - Creating Queries with Arguments
+    - Adding Arguments to Fields
+
+- Making GraphQL Mutations
+
+- Other GraphQL Features
+
+    - Using Request Variables
+    - Making Multiple Requests
+    - Using Query Fragments for Field Selection

@@ -1,0 +1,39 @@
+-----------------------------------------------------------
+CHAPTER 21 - USING URL ROUTING
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Getting Started with URL Routing
+
+- Getting Started with the Link Component
+
+- Getting Started with the Route Component
+
+- Responding to Navigation
+
+- Selecting Components and Content
+
+- Using the render Prop
+
+- Matching URLs Using Segments
+
+- Restricting Matches with Props
+
+- Specifying Multiple URLs in a Path
+
+- Matching URLs with Regular Expressions
+
+- Making a Single Route Match
+
+- Using Redirection as the Fallback Route
+
+- Performing Selective Redirection
+
+- Rendering Navigation Links
+
+- Indicating the Active Route
+
+- Selecting and Configuring the Router
+
+- Using the HashRouter Component

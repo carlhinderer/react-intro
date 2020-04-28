@@ -1,0 +1,36 @@
+-----------------------------------------------------------
+CHAPTER 25 - CONSUMING GRAPHQL
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Changing the Data for the GraphQL Server
+
+- Updating the Schema and Resolvers
+
+- Integrating the GraphQL Server with the Development Tools
+
+- Consuming a GraphQL Service
+
+    - Defining the Queries and Mutations
+    - Defining the Data Source
+    - Configuring the Isolated Components
+
+- Using GraphQL With a Data Store
+
+    - Adjusting to the GraphQL Data Format
+
+- Using a GraphQL Client Framework
+
+    - Configuring the Client
+    - Creating a GraphQL Component
+    - Applying the GraphQL Component
+
+- Using Mutations
+
+    - Updating Cached Data Without a Query
+
+- Adding Support for Supplier Data and Editing
+
+    - Creating the Editor Component
+    - Updating the Router Configuration
