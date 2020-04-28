@@ -1,0 +1,31 @@
+-----------------------------------------------------------
+CHAPTER 20 - USING THE DATA STORE APIS
+-----------------------------------------------------------
+
+- Using the Redux Data Store API
+
+- Obtaining the Data Store State
+
+- Narrowing the Focus on Specific Data
+
+- Observing Data Store Changes
+
+- Dispatching Actions
+
+- Creating a Connector Component
+
+- Enhancing Reducers
+
+- Using Data Store Middleware
+
+- Enhancing the Data Store
+
+- Applying the Enhancer
+
+- Using the React-Redux API
+
+    - Advanced Connect Features
+    - Mapping Data Props
+    - Mapping Function Props
+    - Merging Props
+    - Setting Connection Options

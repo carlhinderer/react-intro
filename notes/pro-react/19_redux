@@ -1,0 +1,41 @@
+-----------------------------------------------------------
+CHAPTER 19 - USING A REDUX DATA STORE
+-----------------------------------------------------------
+
+- Creating the Project
+
+- Creating a Data Store
+
+- Defining the Data Types
+
+- Defining the Initial Data
+
+- Defining the Model Data Action Types
+
+- Defining the Model Action Creators
+
+- Defining the Reducer
+
+- Creating the Data Store
+
+- Applying the Data Store to the Top-Level Component
+
+- Connecting the Product Data
+
+- Connecting the Supplier Data
+
+- Adding State Data to the Store
+
+- Defining the Action Types and Creators for State Data
+
+- Defining the State Data Reducer
+
+- Incorporating the State Data Features into the Store
+
+- Connecting the React Components to the Stored State Data
+
+- Applying the Connector Components
+
+- Dispatching Multiple Actions
+
+- Understanding the Need for References
