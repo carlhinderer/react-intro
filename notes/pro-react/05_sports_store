@@ -226,6 +226,33 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
 
 - Creating the Data Store
 
+    - The starting point for the SportsStore is the data store, which will be the repository
+        for data presented to the user and the supporting details required to coordinate
+        features like pagination.
+
+
+    - We'll start with a data store that uses local placeholder data.  We'll add retrieving
+        it from a web service later.  The data store will be created using the Redux package.
+
+        # File: src/data/placeholderData.js
+        export const data = {
+            categories: ["Watersports", "Soccer", "Chess", "Running"],
+            products: [
+                { id: 1, name: "P1", category: "Watersports",
+                    description: "P1 (Watersports)", price: 3 },
+                { id: 2, name: "P2", category: "Watersports",
+                   description: "P2 (Watersports)", price: 4 },
+                { id: 3, name: "P3", category: "Running",
+                   description: "P3 (Running)", price: 5 },
+                { id: 4, name: "P4", category: "Chess",
+                   description: "P4 (Chess)", price: 6 },
+                { id: 5, name: "P5", category: "Chess",
+                   description: "P6 (Chess)", price: 7 },
+            ]
+        }
+
+
+
 - Creating the Data Store Actions and Action Creators
 
 - Creating the Shopping Features
