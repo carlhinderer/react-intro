@@ -14,8 +14,54 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
 
 - Required Packages
 
-    - 
+    - We need to install additional packages for this project.
 
+        # Install additional packages
+        cd sportsstore
+        npm install bootstrap@4.1.2
+        npm install @fortawesome/fontawesome-free@5.6.1
+        npm install redux@4.0.1
+        npm install react-redux@6.0.0
+        npm install react-router-dom@4.3.1
+        npm install axios@0.18.0
+        npm install graphql@14.0.2
+        npm install apollo-boost@0.1.22
+        npm install react-apollo@2.3.2
+
+
+    - Here is what those packages do:
+
+        bootstrap
+          This package provides the CSS styles that I used to present HTML content 
+            throughout the book.
+
+        fontawesome-free
+          This package provides icons that can be included in HTML content. I have used the 
+            free package, but there is a more comprehensive paid-for option available, too.
+
+        redux
+          This package provides a data store, which simplifies the process of coordinating the 
+            different parts of the application.
+
+        react-redux
+          This package integrates a Redux data store into a React application.
+
+        react-router-dom
+          This package provides URL routing, which allows the content presented to the user to 
+            be selected based on the browser’s current URL.
+
+        axios
+          This package is used to make HTTP requests and will be used to access RESTful and 
+            GraphQL services.
+
+        graphql
+          This package contains the reference implementation of the GraphQL specification.
+
+        apollo-boost
+          This package contains a client used to consume a GraphQL service.
+
+        react-apollo
+          This package is used to integrate the GraphQL client into a React application.
 
 
 
