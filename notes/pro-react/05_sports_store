@@ -195,12 +195,34 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
             createServer();
             console.log("Reloading web service data complete.");
         });
-        
+
         app.listen(port, () => console.log(`Web service running on port ${port}`));
+
+
+    - Now, we update the 'scripts' section of the package.json file to also start the server
+        when we start the React app.
+
+        # Update package.json
+        "scripts": {
+          "start": "npm-run-all --parallel reactstart webservice",
+          "reactstart": "react-scripts start",
+          "webservice": "node server.js",
+          ...
+        }
 
 
 
 - Running the Example Application
+
+    - Now, we can start the application and check that the web server is running.
+
+        # Start server and React application
+        $ npm start
+
+        # Test web service
+        $ curl localhost:3500/api/products/1
+
+
 
 - Creating the Data Store
 
