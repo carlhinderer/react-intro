@@ -16,7 +16,7 @@ CHAPTER 2 - UNDERSTANDING REACT
 
     - For a long time, web apps were developed to follow a round-trip model.
 
-        1. The browser requetss an initial HTML document from the server.
+        1. The browser requests an initial HTML document from the server.
 
         2. User interactions, like clicking a link or submitting a form, leads the browser to
              request and receive a completely new HTML document.  

@@ -4,7 +4,20 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
 
 - Starting the Project
 
+    - Our application, SportsStore, will have an online product catalog, shopping cart,
+        checkout, and admin page.
+
+        # Create the application
+        $ npx create-react-app sportsstore
+
+
+
 - Required Packages
+
+    - 
+
+
+
 
 - Adding the CSS Stylesheets
 
