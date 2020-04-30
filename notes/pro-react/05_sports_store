@@ -116,6 +116,14 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
 
 - Adding the CSS Stylesheets
 
+    - Next, we need to import the stylesheets for the Bootstrap and Font Awesome packages.
+
+        # Add to index.js
+        import "bootstrap/dist/css/bootstrap.css";
+        import "@fortawesome/fontawesome-free/css/all.min.css"; 
+
+
+
 - Preparing the Web Service
 
 - Running the Example Application
