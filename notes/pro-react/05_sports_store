@@ -255,6 +255,52 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
 
 - Creating the Data Store Actions and Action Creators
 
+    - Redux data stores separate reading data from the operations that change it.  This can 
+        feel awkward at first, but quickly becomes second nature.
+
+
+    - 'Actions' are objects that are sent to the data store to make changes to the data it
+        contains.  Actions have types, and action objects are created using 'action creators'.
+
+      Our first action is to load data into the store, initially just the placeholder data.
+
+
+    - First, we'll create a list of the data types in the store.  There is no requirement to
+        use uppercase, but the constants can help avoid name collisions down the road.
+
+        # File: src/data/Types.js
+
+        export const DataTypes = {
+            PRODUCTS: 'products',
+            CATEGORIES: 'categories'
+        }
+
+        export const ActionTypes = {
+            DATA_LOAD: 'data_load'
+        }
+
+
+    - Next, we need an 'action creator' function, which will create an action object that can
+        be processed by the data store to alter the data it contains.
+
+        # File: src/data/ActionCreators.js
+
+        import { ActionTypes } from "./Types";
+        import { data as phData } from "./placeholderData";
+
+        export const loadData = (dataType) => ({
+            type: ActionTypes.DATA_LOAD,
+            payload: {
+                dataType: dataType,
+                data: phData[dataType]
+            }
+        });
+
+
+
+
+
+
 - Creating the Shopping Features
 
 - Creating the Product and Category Components
