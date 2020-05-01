@@ -392,6 +392,29 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
         }
 
 
+    - Now, we add the component for category navigation:
+
+        # File: src/shop/CategoryNavigation.js
+
+        import React, { Component } from "react";
+        import { Link } from "react-router-dom";
+        
+        export class CategoryNavigation extends Component {
+            render() {
+                return <React.Fragment>
+                    <Link className="btn btn-secondary btn-block"
+                        to={ this.props.baseUrl }>All</Link>
+                    { this.props.categories && this.props.categories.map(cat =>
+                        <Link className="btn btn-secondary btn-block" key={ cat }
+                            to={ `${this.props.baseUrl}/${cat.toLowerCase()}`}>
+                            { cat }
+                        </Link>
+                    )}
+                </React.Fragment>
+            }
+        }
+
+
 
 - Connecting to the Data Store and URL Router
 
