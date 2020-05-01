@@ -259,10 +259,12 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
         feel awkward at first, but quickly becomes second nature.
 
 
+
     - 'Actions' are objects that are sent to the data store to make changes to the data it
         contains.  Actions have types, and action objects are created using 'action creators'.
 
       Our first action is to load data into the store, initially just the placeholder data.
+
 
 
     - First, we'll create a list of the data types in the store.  There is no requirement to
@@ -278,6 +280,7 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
         export const ActionTypes = {
             DATA_LOAD: 'data_load'
         }
+
 
 
     - Next, we need an 'action creator' function, which will create an action object that can
@@ -304,6 +307,7 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
         to, and a 'data' property that provides the data to be added to the data store.
 
 
+
     - Actions are processed by data store 'reducers', which are functions that receive the current
         contents of the data store and an action object, and use them to make changes.
 
@@ -327,6 +331,7 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
         type isn't recognized, the reducer should return the data store object unchanged.
 
 
+
     - Finally, we will create the data store, which is very simple for now.
 
         # File: DataStore.js
@@ -340,7 +345,53 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
 
 - Creating the Shopping Features
 
+    - Now, we'll add a storefront, with a 2-column layout.  The left column will list the
+        categories, and the right column will list the products.
+
+
+    - Here are the new URLs we will add:
+
+        /shop/products
+          This URL will display all of the products, regardless of category
+
+        /shop/products/chess
+          This URL will display the products in a specific category
+
+
+
 - Creating the Product and Category Components
+
+    - Components are the building blocks for React applications, and are responsible for
+        the content presented to the user.
+
+      Here is the component for the product list:
+
+        # File: /src/shop/ProductList.js
+
+        import React, { Component } from "react";
+
+        export class ProductList extends Component {
+            render() {
+                if (this.props.products == null || this.props.products.length === 0) {
+                    return <h5 className="p-2">No Products</h5>
+                }
+                return this.props.products.map(p =>
+                        <div className="card m-1 p-1 bg-light" key={ p.id }>
+                            <h4>
+                                { p.name }
+                                <span className="badge badge-pill badge-primary float-right">
+                                    ${ p.price.toFixed(2) }
+                                </span>
+                            </h4>
+                            <div className="card-text bg-white p-1">
+                                { p.description }
+                            </div>
+                        </div>
+                    )
+            }
+        }
+
+
 
 - Connecting to the Data Store and URL Router
 
