@@ -296,8 +296,45 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
             }
         });
 
+      The 'type' parameter is required for all action creators.  As a convention, we use the 
+        'payload' paramter to pass data for all actions in this project (it's a good idea to have 
+        some convention for this).
+
+      The 'payload' has a 'dataType' property that indicates the type of data the action relates
+        to, and a 'data' property that provides the data to be added to the data store.
 
 
+    - Actions are processed by data store 'reducers', which are functions that receive the current
+        contents of the data store and an action object, and use them to make changes.
+
+        # File: ShopReducer.js
+
+        import { ActionTypes } from "./Types";
+
+        export const ShopReducer = (storeData, action) => {
+            switch(action.type) {
+                case ActionTypes.DATA_LOAD:
+                    return {
+                        ...storeData,
+                        [action.payload.dataType]: action.payload.data
+                    };
+                default:
+                    return storeData || {};
+            }
+        }
+
+      Reducers create and return new objects that incorporate any required changes.  If the action
+        type isn't recognized, the reducer should return the data store object unchanged.
+
+
+    - Finally, we will create the data store, which is very simple for now.
+
+        # File: DataStore.js
+
+        import { createStore } from "redux";
+        import { ShopReducer } from "./ShopReducer";
+
+        export const SportsStoreDataStore = createStore(ShopReducer);
 
 
 
