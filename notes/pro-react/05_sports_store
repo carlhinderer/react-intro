@@ -392,13 +392,14 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
         }
 
 
+
     - Now, we add the component for category navigation:
 
         # File: src/shop/CategoryNavigation.js
 
         import React, { Component } from "react";
         import { Link } from "react-router-dom";
-        
+
         export class CategoryNavigation extends Component {
             render() {
                 return <React.Fragment>
@@ -413,6 +414,44 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
                 </React.Fragment>
             }
         }
+
+      When creating the category links, we check to see if the 'categories' array is defined,
+        and if it is, we loop through and create a Link component for each one.  
+
+
+
+    - Now, we create a storefront component to bring the category menu and product table
+        together.
+
+        # File: src/shop/Shop.js
+
+        import React, { Component } from "react";
+        import { CategoryNavigation } from "./CategoryNavigation";
+        import { ProductList } from "./ProductList";
+
+        export class Shop extends Component {
+            render() {
+                return <div className="container-fluid">
+                    <div className="row">
+                        <div className="col bg-dark text-white">
+                            <div className="navbar-brand">SPORTS STORE</div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-3 p-2">
+                            <CategoryNavigation baseUrl="/shop/products"
+                                categories={ this.props.categories } />
+                        </div>
+                        <div className="col-9 p-2">
+                            <ProductList products={ this.props.products } />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+      Here, the Shop is the parent component, and CategoryNavigation and ProductList are its
+        child components.
 
 
 
