@@ -457,6 +457,72 @@ CHAPTER 5 - SPORTS STORE - A REAL APPLICATION
 
 - Connecting to the Data Store and URL Router
 
+    - The Shop component and its child components need access to the data store.  To connect 
+        these components to the features they require, we add a connector component.
+
+        # File: src/shop/ShopConnector.js
+
+        import React, { Component } from "react";
+        import { Switch, Route, Redirect } from "react-router-dom";
+        import { connect } from "react-redux";
+        import { loadData } from "../data/ActionCreators";
+        import { DataTypes } from "../data/Types";
+        import { Shop } from "./Shop";
+
+        const mapStateToProps = (dataStore) => ({
+            ...dataStore
+        })
+
+        const mapDispatchToProps = {
+            loadData
+        }
+
+        const filterProducts = (products = [], category) =>
+            (!category || category === "All")
+                ? products
+                : products.filter(p => p.category.toLowerCase() === category.toLowerCase());
+        
+        export const ShopConnector = connect(mapStateToProps, mapDispatchToProps)(
+            class extends Component {
+                render() {
+                    return <Switch>
+                        <Route path="/shop/products/:category?"
+                            render={ (routeProps) =>
+                                <Shop { ...this.props } { ...routeProps }
+                                    products={ filterProducts(this.props.products,
+                                        routeProps.match.params.category) } />} />
+                        <Redirect to="/shop/products" />
+                    </Switch>
+                }
+
+                componentDidMount() {
+                    this.props.loadData(DataTypes.CATEGORIES);
+                    this.props.loadData(DataTypes.PRODUCTS);
+                }
+            }
+        )
+
+
+    - This component connects the Redux data store and the URL router to the Shop component.
+        
+
+    - The Redux package provides the 'connect' function, which is used to link a component
+        to a data store so that it's props are:
+
+          - values from the data store
+          - or functions that dispatch data store actions when they are invoked
+
+      Much of the code in the connector is due to the 'connect' function, since it requires
+        mappings between the data store and the componen'ts props, which can be verbose.
+
+
+    - The product data must be filtered using the selected category, which as accessed through
+        the features provided by the React Router package.
+
+      The 'path' prop tells the Route to wait until the browser navigates to the 
+
+
+
 - Adding the Shop to the Application
 
 - Improving the Category Selection Buttons
