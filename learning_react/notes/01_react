@@ -1,0 +1,55 @@
+-----------------------------------------------------------------------
+| CHAPTER 1 - WELCOME TO REACT                                        |
+-----------------------------------------------------------------------
+
+- React
+
+    - Created by Jordan Walke, a software engineer at Facebook, in 2011.  In 2013, it was made open source.
+
+    - React Native was released in 2015.
+
+    - More features have been added since:
+        - React router, Redux and Mobx (2015-16)
+        - React Fiber (2017)
+        - Hooks and Suspense (2019)
+
+
+
+- Installing Node.js
+
+    - To verify that you have Node installed:
+
+        $ node -v
+
+
+    - When you install Node, you also install npm.  To start a new project from scratch:
+
+        # Start a new project
+        $ npm init -y
+
+        # Install all dependencies
+        $ npm install
+
+
+    - That creates a 'package.json' file.  Now, you can add dependencies.
+
+        # Add a dependency
+        $ npm install package-name
+
+        # Remove a dependency
+        $ npm remove package-name
+
+
+    - Yarn is an alternative to npm for dependency management.
+
+        # First install yarn globally with npm
+        $ npm install -g yarn
+
+        # Add a dependency
+        $ yarn add package-name
+
+        # Remove a dependency
+        $ yarn remove package-name
+
+        # Install all dependencies
+        $ yarn
