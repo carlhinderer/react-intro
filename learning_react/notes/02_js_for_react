@@ -1,0 +1,87 @@
+-----------------------------------------------------------------------
+| CHAPTER 2 - JAVASCRIPT FOR REACT                                    |
+-----------------------------------------------------------------------
+
+- JavaScript History
+
+    - Released in 1995, used to add interactive elements to web pages
+    - Later became more robust with DHTML and AJAX
+    - Node.js made it a full-stack language
+
+    - ECMAScript History
+        - Version 1 (1997)
+        - Version 2 (1998)
+        - Version 3 (1999)
+        - Version 4 (Never released)
+        - Version 5 (2009)
+        - Version 6 (2015)
+
+
+
+- Declaring Variables
+
+    - Prior to 2015, the only way to declare a variable was with the 'var' keyword.
+
+
+    - A 'const' is a constant variable that cannot be overwritten.
+
+        const pizza = true;
+
+
+    - JS now has lexical variable scope.  In JS, we create code blocks with curly braces.  In functions,
+        these curly braces block off the scope of any variable declared with 'var'.  
+
+      However, with if/else statements, for instance, these blocks would not block off variable scope,
+        until 'let' came along.
+
+        
+    - If a variable is created inside an if/else block, that variable is not scoped to the block.
+
+        var topic = "JavaScript";
+
+        if (topic) {
+          var topic = "React";
+          console.log("block", topic);  // block React
+        }
+
+        console.log("global", topic);   // global React
+
+
+    - With the 'let' keyword, we can scope a variable to any code block.  Using let protects the value
+        of the global variable.
+
+        var topic = "JavaScript";
+
+        if (topic) {
+          var topic = "React";
+          console.log("block", topic);  // React
+        }
+
+        console.log("global", topic);   // JavaScript
+
+
+    - Another 
+
+
+
+- Template Strings
+
+
+
+- Creating Functions
+
+
+
+- Default Parameters
+
+
+
+- Arrow Functions
+
+
+
+- Compiling JavaScript
+
+
+
+- Objects and Arrays
