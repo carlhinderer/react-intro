@@ -1,0 +1,410 @@
+-----------------------------------------------------------------------
+| CHAPTER 3 - WORKING WITH COMPONENTS                                 |
+-----------------------------------------------------------------------
+
+- User Interface Components
+
+    - Creating great CSS styled-elements is hard, and takes a lot of time and patience.  For this reason,
+        many libraries and frameworks that provide nice-looking UI primitives have been built.  There are
+        3 leading UI libraries for React:
+
+        1. MUI (Material UI)
+        2. React-Bootstrap
+        3. Ant Design
+
+
+    - We're using React-Bootstrap for this book, since it's the most straightforward and easiest to use.
+        React-Bootstrap provides React component wrappers for the popular Bootstrap CSS library.
+
+
+    - The React-Bootstrap library provides grids and stacks as the building blocks to help you create the
+        layout of your site.  Grids use the 'Container' component to organize subcomponents.  Stacks use the
+        'Stack' component to render it's subcomponents vertically or horizontally.
+
+
+
+- The Container Component
+
+    - We'll use the 'Container' component to add a small margin around all of our page elements.  Instead
+        of using empty tags <> and </> to wrap our JSX tree, we'll use a 'Container' component.
+
+        src/App.js
+        -----------------------
+        import Container from 'react-bootstrap/Container';
+
+        ...
+
+        return (
+          <Container fluid className="App">
+            ...
+          </Container>
+        );
+
+
+    - The 'Container' component has a 'fluid' attribute, which means that it automatically changes it's 
+        width to fill the browser window.  Without this option, it would snap to one of a few predefined
+        widths associated with standard screen sizes.
+
+
+    - The 'className' is the equivalent of an HTML 'class'.  It had to be renamed to avoid clashing with
+        the JS 'class' statement for creating classes.
+
+
+
+- Adding a Header Component
+
+    - Instead of using an <h1> element for the site header, we'll create a custom component for the
+        application's header.  The Create React App project doesn't have any standard for project structure,
+        but we'll put our custom components in a 'src/components' folder.
+
+
+    - React-Bootstrap comes with a 'NavBar' component that is a perfect fit for the Microblog header.
+
+        src/components/Header.js
+        ----------------------------
+        import Navbar from 'react-bootstrap/Navbar';
+        import Container from 'react-bootstrap/Container';
+
+        export default function Header() {
+          return (
+            <Navbar bg="light" sticky="top" className="Header">
+              <Container>
+                <Navbar.Brand>Microblog</Navbar.Brand>
+              </Container>
+            </Navbar>
+          );
+        }
+
+
+    - As seen in the NavBar examples, a Container component is defined as a child.  A Navbar.Brand component
+        with the application's name is the only thing inside the container for now.
+
+
+    - We will have a fluid Container as the root element, the navigation bar as it's child, and a second
+        container that is not fluid as the child of the navbar.
+
+
+    - Now, we need to add the Header to our 'App.js'.  We'll add an inner container for the blog posts as
+        well.
+
+        import Header from './components/Header';
+
+          return (
+            <Container fluid className="App">
+              <Header />
+              <Container>
+                {posts.length === 0 ?
+                  ...
+                }
+              </Container>
+            </Container>
+          );
+
+
+    - If we look close, we'll see that there is a small margin on the left and right sides of the header,
+        since the div has non-zero padding.  Also, we want to add a border to the bottom of the header
+        to separate it from the blog posts.
+
+      To fix these 2 things, add styles to 'index.css':
+
+        src/index.css
+        ----------------------------
+        .App {
+          padding: 0;
+        }
+
+        .Header {
+          border-bottom: 1px solid #ddd;
+        }
+
+
+
+- Adding a Sidebar
+
+    - We'll also add a sidebar, which will offer navigation links to switch between the 'feed page' (which
+        shows posts from followed users) and the 'explore page' (which shows posts from all users).
+
+
+    - We can use the same Navbar component, along with the Nav.Link component to do this.  Here is the first
+        implementation of the sidebar, with placeholder links that will not work properly until page
+        routing is implemented:
+
+        src/components/Sidebar.js
+        -----------------------------
+        import Navbar from "react-bootstrap/Navbar";
+        import Nav from "react-bootstrap/Nav";
+
+        export default function Sidebar() {
+          return (
+            <Navbar sticky="top" className="flex-column Sidebar">
+              <Nav.Item>
+                <Nav.Link href="/">Feed</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link href="/explore">Explore</Nav.Link>
+              </Nav.Item>
+            </Navbar>
+          );
+        }
+
+
+    - The sticky="top" attribute of the Navbar component will keep the sidebar visible on the page as the
+        user scrolls down.  The 'flex-column' class comes from the Bootstrap framework, and will make
+        the direction of it's children vertical.
+
+
+    - Now, we need to add the sidebar to our 'App.js', to the left of the content area.  When needing to
+        position 2 elements side-by-side, the ideal layout tool is a horizontal stack.
+
+        src/App.js
+        -------------------------
+        import Container from 'react-bootstrap/Container';
+        import Stack from 'react-bootstrap/Stack';
+        import Header from './components/Header';
+        import Sidebar from './components/Sidebar';
+
+        export default function App() {
+          const posts = [
+            ...  // <-- no changes to fake blog posts
+          ];
+
+          return (
+            <Container fluid className="App">
+              <Header />
+              <Container>
+                <Stack direction="horizontal">
+                  <Sidebar />
+                  <Container>
+                    {posts.length === 0 ?
+                      ...  // <-- no changes to render loop
+                    }
+                  </Container>
+                </Stack>
+              </Container>
+            </Container>
+          );
+
+
+    - Now, we need to add styles to the sidebar:
+
+        src/index.css
+        -------------------------
+        .Sidebar {
+          width: 120px;
+          margin: 5px;
+          position: sticky;
+          top: 62px;
+          align-self: flex-start;
+          align-items: start;
+        }
+
+        .Sidebar .nav-item {
+          width: 100%;
+        }
+
+        .Sidebar a {
+          color: #444;
+        }
+
+        .Sidebar a:hover {
+          background-color: #eee;
+        }
+
+        .Sidebar a:visited {
+          color: #444;
+        }
+
+
+
+- Building Reusable Components
+
+    - A good strategy is to always try to partition the application into many components, each with only
+        one purpose.  Right, now the App component is doing to much, as it is in charge of rendering the
+        overall layout and also the fake representation of the blog feed.
+
+
+    - To prepare the application to support page navigation, we'll refactor the App component so that the
+        content area is rendered by a subcomponent that can be swapped out as the user navigates through
+        different pages.
+
+      Here is a new component called 'Posts', which renders the fake blog posts:
+
+        src/components/Posts.js
+        --------------------------------
+        export default function Posts() {
+          const posts = [
+            {
+              id: 1,
+              text: 'Hello, world!',
+              timestamp: 'a minute ago',
+              author: {
+                username: 'susan',
+              },
+            },
+            {
+              id: 2,
+              text: 'Second post',
+              timestamp: 'an hour ago',
+              author: {
+                username: 'john',
+              },
+            },
+          ];
+
+          return (
+            <>
+              {posts.length === 0 ?
+                <p>There are no blog posts.</p>
+              :
+                posts.map(post => {
+                  return (
+                    <p key={post.id}>
+                      <b>{post.author.username}</b> &mdash; {post.timestamp}
+                      <br />
+                      {post.text}
+                    </p>
+                  );
+                })
+              }
+            </>
+          );
+        }
+
+
+    - Now, we can replace the posts in App.js with this component:
+
+        src/App.js
+        -----------------------------
+        import Posts from './components/Posts';
+
+        export default function App() {
+          return (
+            <Container fluid className="App">
+              <Header />
+              <Container>
+                <Stack direction="horizontal">
+                  <Sidebar />
+                  <Container>
+                    <Posts />
+                  </Container>
+                </Stack>
+              </Container>
+            </Container>
+          );
+        }
+
+
+
+- Components with Props
+
+    - We can envision that once multiple pages are supported, the <Posts /> component is going to be one of
+        many possible options to include in the content area of the page.  Also, the Sidebar will need to
+        be omitted in some cases (for instance, when a user is not logged in).
+
+      Since we want to keep the App as simple as possible, this is another opportunity to move logic down
+        into a new subcomponent.
+
+
+    - The new component, which we'll call 'Body', will be generic enough to render the main page content
+        with or without a sidebar.  To do this, we'll need to accept input arguments, called 'props' in
+        React.
+
+
+    - Here is how the feed page of the application could render the list of blog posts, with the sidebar:
+
+        <Body sidebar={true}>
+          <Posts />
+        </Body>
+
+
+    - For a slightly more compact version, we could omit the {true} value and just use:
+
+        <Body sidebar>
+          <Posts />
+        </Body>
+
+
+    - Implementing a login page using this same Body component could be done with:
+
+        <Body sidebar={false}>
+          <h1>Login</h1>
+          <form>
+            ...
+          </form>
+        </Body>
+
+
+    - Or for a more compact version, we can omit the sidebar altogether, which would make it default to
+        a falsy value:
+
+        <Body>
+          <h1>Login</h1>
+          <form>
+            ...
+          </form>
+        </Body>
+
+
+    - This is extremely powerful, because the Body component becomes the absolute authority on how to 
+        format the body of the page.  If we wanted to move the sidebar to the right side, we would only
+        need to change this in one place.
+
+
+    - To create a Body component that can receive props passed in from other components:
+
+        export default function Body(props) {
+          // props.sidebar is the value of the sidebar attribute
+          // props.children is the JSX component tree parented by this component
+        }
+
+
+    - In practice, you will find that most React developers use destructuring assignments to receive props.
+        This is equivalent:
+
+        export default function Body({ sidebar, children }) {
+          // sidebar is the value of the sidebar attribute
+          // children is the JSX component tree parented by this component
+        }
+
+
+    - Here's the code for the Body component:
+
+        src/components/Body.js
+        -----------------------------
+        import Container from 'react-bootstrap/Container';
+        import Stack from 'react-bootstrap/Stack';
+        import Sidebar from './Sidebar';
+
+        export default function Body({ sidebar, children }) {
+          return (
+            <Container>
+              <Stack direction="horizontal" className="Body">
+                {sidebar && <Sidebar />}
+                <Container className="Content">
+                  {children}
+                </Container>
+              </Stack>
+            </Container>
+          );
+        }
+
+
+    - Now the updated version of the App component is:
+
+        src/App.js
+        ----------------------------
+        import Container from 'react-bootstrap/Container';
+        import Header from './components/Header';
+        import Body from './components/Body';
+        import Posts from './components/Posts';
+
+        export default function App() {
+          return (
+            <Container fluid className="App">
+              <Header />
+              <Body sidebar>
+                <Posts />
+              </Body>
+            </Container>
+          );
+        }
