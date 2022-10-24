@@ -1,0 +1,412 @@
+-----------------------------------------------------------------------
+| CHAPTER 2 - HELLO, REACT!                                           |
+-----------------------------------------------------------------------
+
+- Creating a React Starter Project
+
+    - First, make sure node is installed:
+
+        $ node -v
+
+
+    - The 'npx' command comes with Node.js, along with the better known 'npm'.  It's purpose is to execute
+        Node packages.  The first argument is the package to execute, and additional arguments are passed in
+        once it runs.  You don't have to install 'create-react-app' prior to running it, since npx downloads
+        it on the fly.
+
+      To create a new React application:
+
+        $ npx create-react-app react-microblog
+
+
+    - The following files and directories are created:
+
+        README.md           # Short document with instructions for how to use project
+
+        package.json        # The standard Node.js project metadata files, with a description of your
+        package-lock.json   #   project and it's metadata
+
+        public              # Directory from where React app will be served during development.  Includes
+                            #   the index.html page, which loads the appication in the browser, some
+                            #   icon files, and miscellaneous static files.
+
+        src                 # Source code for the application.  The starter application comes with a few
+                            #   source files for a simple demo application.
+
+        node_modules        # Standard directory where Node installs all the dependencies for the project
+
+        build               # Will be added later when you create a production build of your project
+
+        .git                # Also makes the application a local git repo
+        .gitignore
+
+
+    - To start the project:
+
+        $ npm start
+
+        // Navigate to http://localhost:3000 to see the application
+
+
+    - The application will automatically reload any changes, so it's a good idea to keep the app running at
+        all time during development.
+
+
+
+- Installing Third-Party Dependencies
+
+    - The standard 'package.json' file lists, among other things, all the dependencies for the project.
+
+
+    - We'll install a few more packages we'll need for the project:
+
+        $ npm install bootstrap react-bootstrap react-router-dom serve
+
+
+    - Here is a brief summary of the packages:
+
+        bootstrap               # A CSS user interface library for web pages
+
+        react-bootstrap         # A React component library wrapper for the bootstrap package
+
+        react-router-dom        # A React component library that implements client-side routing
+
+        serve                   # A static web file server that can be used to run the Production version
+                                #   of the React application
+
+
+
+- Application Structure
+
+    - The 'public/index.html' file is the main HTML page for a React application.  Since React is a
+        SPA library, this is the only page the browser will load.  Once the page and all it's referenced
+        resources are downloaded by the browser, state changes will be managed strictly through JS events.
+
+
+    - The first thing we'll do is upate the description in 'index.html' in the meta tag, which is used by
+        search engines to show some information about the website in search results.
+
+        <meta
+          name="description"
+          content="Microblogging application featured in the React Mega-Tutorial"
+        />
+
+
+    - We'll also change the page title in 'index.html':
+
+        <title>Microblog</title>
+
+
+    - Note that in the <body> section, we find the root of the application:
+
+        <div id="root"></div>
+
+      When the application starts, it will insert the contents of the page into this element.
+
+
+    - The 'public' directory also has a file named 'manifest.json'.  This file provides information about
+        the application.  Client devices can use the information in this file to provide a better user
+        experience.
+
+      We'll update the 'short_name' and 'name' keys in that file.
+
+        "short_name": "Microblog",
+        "name": "React Microblog",
+
+
+
+- The index.js File
+
+    - The 'src/index.js' file is the main JS file that is loaded by 'index.html'.  This file bootstraps the
+        React application.
+
+
+    - The code in index.js has the entry point for the React rendering engine.  There should be a main 
+        section with a call to render the application, which looks like:
+
+        root.render(
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>,
+        );
+
+
+    - A css file is imported at the top of this file.  This source code conversion process generates
+        optimized JS and CSS bundles that are then downloaded by a browser.  Importing a css file informs
+        the build that a CSS file should be added to the application CSS bundle.
+
+
+    - The purpose of the 'render()' function is to generate the contents of the application and apply them
+        to the 'root' node in index.html.  The argument to the render function is a JSX tree 
+        representing the entire application.
+
+
+    - The 'App' symbol is imported from the 'App.js' source file.  This is the top-level component of the
+        application.  'App' represents a hierarchical collection of elements that represent the entire
+        application.
+
+      A React component is a super-powered HTML element.  It is rendered using angle brackets like an HTML
+        element.  You can tell the difference between native elements and React components because the
+        former use lowercase letters and the latter use CamelCase.
+
+
+    - The <React.StrictMode> component that wraps the <App /> enables some internal checks during
+        development that alert you of possible problems with your code.
+
+
+    - At the bottom of the file you see a call to a 'reportWebVitals()' function.  This is an optional
+        feature of React that allows you to analyze the performance of your application.
+
+
+    - The one change we will make to 'index.js' is to add the bootstrap css file to the project.  We'll
+        add this line right above the line where the 'index.css' file is imported:
+
+
+
+- Deleting Unnecessary Files
+
+    - The 'src' directory has 2 files called 'logo.svc' and 'App.css' that we won't use in this application,
+        so we're going to delete them.
+
+        - The 'logo.svc' is the rotating React logo that appears in the center of the page of the starter
+            application.
+
+        - The 'App.css' file stores CSS definitions for the top-level application component, but the 
+            project also has 'index.css' for application-wide styles.  In this project, we'll maintain the
+            entire collection of styles in 'index.css'.
+
+
+
+- A Basic React Application
+
+    - We'll replace the 'App.js' code with a simpler base application that doesn't require any starter
+        files:
+
+        src/App.js
+        ------------------------
+        export default function App() {
+          return (
+            <h1>Microblog</h1>
+          );
+        }
+
+
+    - In React, components can be written as either classes or functions.  Function-based components (added
+        in React 16.8) are newer and use a more concise syntax.  They are associated with hooks, another
+        important feature we'll learn later.
+
+
+    - Component functions need to be exported so they can be imported and used by other files.  For that
+        reason, component functions are always defined with 'export default function'.
+
+
+    - To keep source code well organized, a component is written in a source file of the same name.  For
+        instance, the 'App' component is in a source file named 'App.js'.
+
+
+    - A component must return a representation of itself as an HTML element tree.  The function is said to
+        be the component's 'render' function for that reason.
+
+      The 'App' component renders itself as an <h1> element.  When the application runs in the browser, the
+        <h1> element is inserted as a child of the root <div> element in the index.html file.
+
+
+
+- Dynamic Rendering
+
+    - To render dynamic content, the JSX syntax can be expanded with templating expressions, which make it
+        possible to render content stored in variables that can be single values or lists.
+
+
+    - A JSX definition can include JS expressions, given inside curly brackets.  This works for text and
+        attributes of elements.
+
+        <h1>Hello, {name}!</h1>
+        <img src={image_url} />
+
+
+    - Since we don't have a back-end yet, we'll mock out a blog post that can be rendered to the page.
+
+        src/App.js
+        ------------------------
+        export default function App() {
+          const post = {
+            id: 1,
+            text: 'Hello, world!',
+            timestamp: 'a minute ago',
+            author: {
+              username: 'susan',
+            },
+          }
+
+          return (
+            <>
+              <h1>Microblog</h1>
+              <p>
+                <b>{post.author.username}</b> &mdash; {post.timestamp}
+                <br />
+                {post.text}
+              </p>
+            </>
+          );
+        }
+
+
+    - Note that we could wrap our tree in a <div> element, but that would render an unnecessary element to
+        the page.  Using empty tags <> and </> is more efficient, as these do not actually produce any
+        render output.  These tags create a 'fragment', which is an invisible parent that can be added
+        to a larger tree.
+
+
+
+- Rendering Lists of Elements
+
+    - So far, we've rendered variables that are simple values or objects, but now we want to render an
+        array.  When the expression inside curly brackets is an array, React outputs the elements of the
+        array one after another.
+
+        export default function RenderArray() {
+          const data = ['one', 'two', 'three'];
+
+          return (
+            <>{data}</>
+          );
+        }
+
+
+    - The output of the statement is 'onetwothree'.  To add HTML markup to each element in the array, we
+        use the 'map()' method of the Array class to transform each element into it's desired JSX expression.
+
+      To render the above list as an HTML unordered list:
+
+        export default function RenderArray() {
+          const data = ['one', 'two', 'three'];
+
+          return (
+            <ul>
+              {data.map(element => {
+                return <li>{element}</li>
+              })}
+            </ul>
+          );
+        }
+
+
+    - Let's use this technique to instead render a list of posts.
+
+        src/App.js
+        ----------------------
+        export default function App() {
+          const posts = [
+            {
+              id: 1,
+              text: 'Hello, world!',
+              timestamp: 'a minute ago',
+              author: {
+                username: 'susan',
+              },
+            },
+            {
+              id: 2,
+              text: 'Second post',
+              timestamp: 'an hour ago',
+              author: {
+                username: 'john',
+              },
+            },
+          ];
+
+          return (
+            <>
+              <h1>Microblog</h1>
+              {posts.map(post => {
+                return (
+                  <p>
+                    <b>{post.author.username}</b> &mdash; {post.timestamp}
+                    <br />
+                    {post.text}
+                  </p>
+                );
+              })}
+            </>
+          );
+        }
+
+
+    - This looks great, but we'll see a warning in the debugging console that 'Each child in a list should
+        have a unique key prop'.  This is because React has a performance optimization that triggers when
+        a list changes, only updating elements that were added, removed, or changed.
+
+      To be able to determine which elements to update, each item should have a 'key' attribute on the
+        top-level JSX node for each component.
+
+        {posts.map(post => {
+          return (
+            <p key={post.id}>
+              ...  // <-- no changes to the post JSX
+            </p>
+          );
+        })}
+
+
+
+- Conditional Rendering
+
+    - We can also render parts of the JSX tree only when a certain condition is true.  To show a message
+        when an array has no elements to render:
+
+        export default function RenderArray() {
+          const data = [];
+
+          return (
+            <>
+              <ul>{data.map(element => <li>{element}</li>)}</ul>
+              {data.length === 0 &&
+                <p>There is nothing to show here.</p>
+              }
+            </>
+          );
+        }
+
+
+    - Here, the && operator is used to create an expression that will only include the JSX contents on
+        the right side of the && if the condition on the left side is true.
+
+      This example isn't perfect, because when the list is empty, an empty <ul> element is still rendered
+        on the page.  To fix this, we'll use a ternary opertor instead:
+
+        export default function RenderArray() {
+          const data = [];
+
+          return (
+            <>
+              {data.length === 0 ?
+                <p>There is nothing to show here.</p>
+              :
+                <ul>{data.map(element => <li>{element}</li>)}</ul>
+              }
+            </>
+          );
+        }
+
+
+    - We'll use this in our microblogging application, by updating the component:
+
+          return (
+            <>
+              <h1>Microblog</h1>
+              {posts.length === 0 ?
+                <p>There are no blog posts.</p>
+              :
+                posts.map(post => {
+                  return (
+                    <p key={post.id}>
+                      <b>{post.author.username}</b> &mdash; {post.timestamp}
+                      <br />
+                      {post.text}
+                    </p>
+                  );
+                })
+              }
+            </>
+          );
