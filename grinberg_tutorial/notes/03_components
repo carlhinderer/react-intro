@@ -219,7 +219,7 @@
 - Building Reusable Components
 
     - A good strategy is to always try to partition the application into many components, each with only
-        one purpose.  Right, now the App component is doing to much, as it is in charge of rendering the
+        one purpose.  Right, now the App component is doing too much, as it is in charge of rendering the
         overall layout and also the fake representation of the blog feed.
 
 

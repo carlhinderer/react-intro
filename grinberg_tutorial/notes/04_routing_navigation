@@ -1,0 +1,259 @@
+-----------------------------------------------------------------------
+| CHAPTER 4 - ROUTING & PAGE NAVIGATION                               |
+-----------------------------------------------------------------------
+
+- Creating Page Components
+
+    - The React Router package, which we installed previously, implements a complete page navigation 
+        system for SPAs.  In this chapter, we'll create client-side routes and navigate between them.
+
+
+    - SPAs really only have one page.  In an SPA, pages are just top-level application states that
+        dictate how the application renders in the browser.  Pages can be associated with paths, but these
+        paths are managed by the client and never reach the server.
+
+
+    - The React-Router package keeps track of all these states, and automatically updates the address bar
+        of the browser with the appropriate URL path.  It also takes control of the Back and Forward
+        buttons of the browser and makes them work as you would expect.
+
+
+    - To help have a sane application structure, the top-level components that map to logical pages of
+        the application will be written in a separate directory, called 'pages'.
+
+
+    - The default page for this application is going to be the page that displays the post feed for the
+        user.  Let's move the 'Body' component, which is currently in 'App', to a new 'FeedPage'
+        component.
+
+        src/pages/FeedPage.js
+        ----------------------------
+        import Body from '../components/Body';
+        import Posts from '../components/Posts';
+
+        export default function FeedPage() {
+          return (
+            <Body sidebar>
+              <Posts />
+            </Body>
+          );
+        }
+
+
+    - We'll also have an 'Explore' page for the application, which will display blog posts from all the
+        users in the system, so that users can discover other users to follow.  We'll add a placeholder
+        for this page.
+
+        src/pages/ExplorePage.js
+        ---------------------------
+        import Body from '../components/Body';
+
+        export default function ExplorePage() {
+          return (
+            <Body sidebar>
+              <h1>Explore</h1>
+              <p>TODO</p>
+            </Body>
+          );
+        }
+
+
+    - Even though the application isn't ready to have a login page yet, we'll also create a placeholder
+        for the 'LoginPage' component, so that we can test the navigation between the 3 different pages.
+
+        src/pages/LoginPage.js
+        --------------------------
+        import Body from '../components/Body';
+
+        export default function LoginPage() {
+          return (
+            <Body>
+              <h1>Login form</h1>
+              <p>TODO</p>
+            </Body>
+          );
+        }
+
+
+    - Now, the 'App' component can implement routing for these 3 pages.
+
+        src/App.js
+        --------------------------
+        import Container from 'react-bootstrap/Container';
+        import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+        import Header from './components/Header';
+        import FeedPage from './pages/FeedPage';
+        import ExplorePage from './pages/ExplorePage';
+        import LoginPage from './pages/LoginPage';
+
+        export default function App() {
+          return (
+            <Container fluid className="App">
+              <BrowserRouter>
+                <Header />
+                <Routes>
+                  <Route path="/" element={<FeedPage />} />
+                  <Route path="/explore" element={<ExplorePage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+              </BrowserRouter>
+            </Container>
+          );
+        }
+
+
+    - The components we are using from react-router-dom are:
+
+        - BrowserRouter
+            - adds routing support to the application
+            - must be a parent to all routing logic in the application
+            - renders children without rendering anything itself
+
+        - Routes
+            - needs to be inserted in the place where contents need to change based on current page
+            - switch statement for pages
+
+        - Route
+            - used to define a route inside the 'Routes' component
+            - the 'path' attribute defines the path portion of the URL
+            - the 'element' attribute specifies what contents are associated with the route
+            - case statement for page
+
+        - Navigate
+            - special component that allows to redirect from one route to another
+            - the fourth route (*) works as a catch-all to any URL not matched by routes above it
+            - the element redirects all these unknown URLs to the root URL
+
+
+    - Now, the address bar and Back and Forward buttons are connected to the application, and routing is
+        functional.  We can navigate to the routes:
+
+        http://localhost:3000/login
+        http://localhost:3000/explore
+
+      Currently, the links on the sidebar aren't connected to React-Router, so they trigger a full-page
+        reload.  We can use them to switch back and forth between Feed and Explore, though.
+
+
+
+- Implementing Links
+
+    - Right now, the links in the Sidebar reload the entire React application every time they are clicked.
+        The React-Router package provides the 'Link' and 'NavLink' components to aid in the generation
+        of SPA-friendly links.
+
+      'Link' is just a regular link.  'NavLink' extends the behavior of a link with the ability to become
+        'active' when its URL matches the current page, allowing the application to change the styling.
+
+
+    - The existing links in the sidebar use the 'Nav.Link' component from React-Bootstrap.  We'll combine
+        this with the 'NavLink' (no relation) component from React-Router to create an SPA link.  The 'as'
+        attribute is used to specify a different base component, which allows React-Bootstrap to be
+        integrated with components in other libraries.
+
+        <Nav.Link as={NavLink} to="/">Feed</Nav.Link>
+
+
+    - Here is the updated Sidebar:
+
+        src/components/Sidebar.js
+        ------------------------------
+        import Navbar from "react-bootstrap/Navbar";
+        import Nav from "react-bootstrap/Nav";
+        import { NavLink } from 'react-router-dom';
+
+        export default function Sidebar() {
+          return (
+            <Navbar sticky="top" className="flex-column Sidebar">
+              <Nav.Item>
+                <Nav.Link as={NavLink} to="/" end>Feed</Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link as={NavLink} to="/explore">Explore</Nav.Link>
+              </Nav.Item>
+            </Navbar>
+          );
+        }
+
+
+    - Since the NavLink knows when it is 'active', we'll add a new style for the active link:
+
+        src/index.css
+        -----------------------------
+        .Sidebar .nav-item .active {
+          background-color: #def;
+        }
+
+
+    - Now whichever link is active will have a blue background.
+
+
+
+- Pages with Dynamic Parameters
+
+    - For most web applications, some pages need route URLs that have placeholders in sections of the path.
+        For instance, if we have a profile page for each user, we can put the user ID or name in the path
+        itself:
+
+        /user/{username}
+
+
+    - To define a route with a dynamic section, the 'path' attribute of the 'Route' comonent uses a
+        special syntax with a colon prefix:
+
+        <Route path="/user/:username" element={<UserPage />} />
+
+      The component referenced by the 'element' attribute or any of it's children can use the 'useParams()'
+        function to access they dynamic parameters of the current URL as an object.
+
+
+    - This is the first time we encounter a function that starts with the word 'use'.  In React, 'use'
+        functions are called 'hooks'.  Hook functions are special in React, because they provide access to
+        application state.  React includes a number of hooks.
+
+      Also, many libraries for React also create their own hooks, such as the 'useParams()' hook from
+        React-Router.  Applications can create custom hooks as well.
+
+
+    - We'll add a simple user profile page to the application, which for now will just show the username.
+        It will be called the 'UserPage' component.
+
+        src/pages/UserPage.js
+        -----------------------------
+        import { useParams } from 'react-router-dom';
+        import Body from '../components/Body';
+
+        export default function UserPage() {
+          const { username } = useParams();
+
+          return (
+            <Body sidebar>
+              <h1>{username}</h1>
+              <p>TODO</p>
+            </Body>
+          );
+        }
+
+
+    - We'll add the UserPage to the App component:
+
+        src/App.js
+        ----------------------------
+        import UserPage from './pages/UserPage';
+
+        ...
+
+        <Routes>
+          <Route path="/" element={<FeedPage />} />
+          <Route path="/explore" element={<ExplorePage />} />
+          <Route path="/user/:username" element={<UserPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+
+
+    - As with the login page, this new profile page isn't linked to from any other part of the application.
+        We can view it by navigating directly to it with the URL:
+
+        http://localhost:3000/user/susan

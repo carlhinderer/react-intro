@@ -161,6 +161,8 @@
     - The one change we will make to 'index.js' is to add the bootstrap css file to the project.  We'll
         add this line right above the line where the 'index.css' file is imported:
 
+        import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 - Deleting Unnecessary Files
