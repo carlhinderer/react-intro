@@ -1,0 +1,588 @@
+-----------------------------------------------------------------------
+| CHAPTER 5 - CONNECTING TO A BACK END                                |
+-----------------------------------------------------------------------
+
+- Running the Microblog API Back End
+
+    - We'll use the Microblog API as our back end:
+
+        https://github.com/miguelgrinberg/microblog-api
+
+
+    - The Microblog API needs access to an email server, which will be used in a later chapter with the
+        reset password flow.  The easiest way to send email is to open a 'SendGrid' account, which allows
+        you to send 100 emails per day with the free tier.
+
+        - Open an account and create an API key.
+
+        - The email settings for a SendGrid account are as follows:
+
+            MAIL_SERVER=smtp.sendgrid.net
+            MAIL_PORT=587
+            MAIL_USE_TLS=true
+            MAIL_USERNAME=apikey    # <-- this is the literal word "apikey"
+            MAIL_PASSWORD=          # <-- your SendGrid API key here
+            MAIL_DEFAULT_SENDER=    # <-- the sender email address you'd like to use
+
+
+    - There are 3 methods for installing the back end:
+
+        1. Run on your computer with Docker
+        2. Run on your computer with Python
+        3. Deploy to Heroku
+
+
+
+- Running the Back End on Docker
+
+    - First, clone the back end:
+
+        $ git clone https://github.com/miguelgrinberg/microblog-api
+        $ cd microblog-api
+
+
+    - Next, create a configuration file with the name '.env':
+
+        .env
+        -------------------------
+        DISABLE_AUTH=true
+        MAIL_SERVER=smtp.sendgrid.net
+        MAIL_PORT=587
+        MAIL_USE_TLS=true
+        MAIL_USERNAME=apikey
+        MAIL_PASSWORD=                 # <-- your SendGrid API key
+        MAIL_DEFAULT_SENDER=           # <-- any email address
+
+
+    - Start the back end with Docker Compose:
+
+        $ docker-compose up -d
+
+
+    - Once the service is up and running, run the next 2 commands to populate the database with randomly
+        generated data:
+
+        $ docker-compose run --rm microblog-api bash -c "flask fake users 10"
+        $ docker-compose run --rm microblog-api bash -c "flask fake posts 100"
+
+
+    - To check that the service is running correctly, navigate to:
+
+        http://localhost:5000
+
+
+    - If you need to use a different port, add a setting to the .env file:
+
+        MICROBLOG_API_PORT=4000
+
+
+
+- Running the Back End with Python
+
+    - Clone the back end and create a .env file exactly as above.
+
+
+    - Now, install the requirements:
+
+        $ python3 -m venv venv
+        $ source venv/bin/activate
+        $ pip install -r requirements.txt
+
+
+    - Now, initialize the database and add some random data:
+
+        $ flask db upgrade
+        $ flask fake users 10
+        $ flask fake posts 100
+
+
+    - Start the service:
+
+        $ flask run
+
+        # Use a different port
+        $ flask run --port=4000
+
+
+
+- Using State Variables
+
+    - We'll remove the fake blog posts and render content returned by the server.  React does not allow
+        synchronous calls for data, since this would cause the application to freeze and appear
+        unresponsive.  So, data loading is done as a 'side effect' in a background task.
+
+
+    - The proces of rendering data from the server takes these steps:
+
+        1. The component's render function is invoked.  Within this function, the request to the server is
+             scheduled as a background operation (a 'side effect' in React jargon).  The component must
+             return quickly and without blocking, so it usually shows a spinner or loading message.
+
+        2. The background task runs, and at some point a response is received.  The background task
+             notifies React that some new data has been received and is ready for rendering.
+
+        3. React calls the component's render function a second time, and the component re-renders itself
+             with the data that was received.
+
+
+    - The React feature that makes this multistep render process possible is called a 'state variable'.
+        The 'useState()' hook function from React is used to create state variables.  Hook functions can
+        only be called from component functions or other hooks.
+
+
+    - Here is how a 'posts' state variable to hold a list of blog posts could be allocated inside the
+        Posts component:
+
+        const [posts, setPosts] = useState();
+
+
+    - If an argument is passed to 'useState()', then this becomes the initial value for the state
+        variable.  This can be a primitive like a string or number, an arrary or object, or it can be set
+        to null or undefined.  If the argument is omitted, it is set to undefined.
+
+
+    - The return value from the hook is an array with 2 elements:
+
+        1. The current value of the state variable (in this case, undefined)
+
+        2. The setter function for the state variable, which is used to update the value of the state
+             variable.  This will be done in the background task when the data is received.  Calling the
+             setter function with a new value is what triggers Step 3 of the render process.
+
+
+    - The first step in the migration to use real data in the Posts component is to replace the 'posts'
+        constant with a state variable.
+
+        import { useState } from 'react';
+        import Spinner from 'react-bootstrap/Spinner';
+
+        export default function Posts() {
+          const [posts, setPosts] = useState();
+
+          // TODO: add a side effect function to request posts here
+
+          return (
+            <>
+              {posts === undefined ?
+                <Spinner animation="border" />
+              :
+                <>
+                  ... // <-- no changes to blog post JSX
+                </>
+              }
+            </>
+          );
+        }
+
+
+
+- Configuring the Back End Root URL
+
+    - The most convenient way to incorporate the back end URL into the front end project is through an
+        environment variable.  Applications generated by Create React App have environment variable support,
+        either directly from the shell or through environment files.
+
+
+    - Create an environment file called '.env' in the top-level directory of the React project, and add
+        this line:
+
+        REACT_APP_BASE_API_URL=http://localhost:5000
+
+
+    - Env vars that are meant to be imported into the React app must have a name that starts with 'REACT_APP'.
+
+
+    - Stop and restart the React app so that the env var is loaded.
+
+
+
+- Using the API Documentation Site
+
+    - Open the Microblog documentation site by navigating to it's root url in your browser.  Find the 'posts'
+        section under 'Endpoints'.  Click the endpoint labeled 'Retrieve the user's post feed.', which 
+        shows you how to make the request.
+
+
+    - For the time being, we don't have authentication wired up.  When running without authentication, all
+        requests are automatically authenticated to the first user in the system.
+
+
+    - For this request, we see:
+
+        HTTP method: GET
+        URL: /api/feed
+
+      We can ignore the pagination query params for now.
+
+
+    - The 'Responses' section shows us the structure of the data that is returned.  It has 'data' and
+        'pagination' top-level sections.  We can use the web form to send a test API request and view the
+        response.
+
+
+
+- Sending a Request with 'fetch()'
+
+    - The 'fetch()' function, available in all modern browsers, is the simplest way to send HTTP requests
+        to a server.  Another popular HTTP client used in many React applications is 'axios'.  For this
+        application, we'll use fetch().
+
+
+    - GET requests that don't require authentication or other input arguments can be sent by just calling
+        'fetch()' with the URL as an argument.
+
+        const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+        const response = await fetch(BASE_API_URL + '/api/feed');
+
+
+    - The Response object returned by fetch() provides many attributes and methods to work with the HTTP
+        response.
+
+        const results = await response.json();
+
+        if (response.ok) {
+          console.log(results.data);
+          console.log(results.pagination);
+        }
+
+
+
+- Creating a Side Effect Function
+
+    - In React, side effect functions are created with the 'useEffect()' hook function inside the component's
+        render function.  It accepts 2 arguments:
+
+        1. The function that needs to run in the background
+        2. An array of dependencies that determine when the effect needs to run
+
+
+    - Understanding how to use the second argument to 'useEffect()' is often difficult when learning React.
+        A simple rule to remember is that when this argument is set to an empty array, the side effect
+        runs once when the component is first rendered, then never again.
+
+      A common mistake is to forget to include the second argument.  This is interpreted by React that
+        the side effect should be run every time the component is rendered, which is rarely necessary.
+        For now, we'll just use an empty array as the argument.
+
+
+    - Here is the updated Posts component, with the side effect function in place:
+
+        src/components/Posts.js
+        --------------------------------
+        import { useState, useEffect } from 'react';
+        import Spinner from 'react-bootstrap/Spinner';
+
+        const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+
+        export default function Posts() {
+          const [posts, setPosts] = useState();
+
+          useEffect(() => {
+            (async () => {
+              const response = await fetch(BASE_API_URL + '/api/feed');
+              if (response.ok) {
+                const results = await response.json();
+                setPosts(results.data);
+              }
+              else {
+                setPosts(null);
+              }
+            })();
+          }, []);
+
+          return (
+            <>
+              {posts === undefined ?
+                <Spinner animation="border" />
+              :
+                <>
+                  {posts === null ?
+                     <p>Could not retrieve blog posts.</p>
+                  :
+                    <>
+                      ... // <-- no changes to blog post JSX
+                    </>
+                  }
+                </>
+              }
+            </>
+          );
+        }
+
+
+    - React requires that the function that is given as the argument to 'useEffect()' is not async.  A
+        commonly used trick to enable the use of 'async' and 'await' in side effect functions is to 
+        create an inner function and immediately call it.  This pattern is commonly referred to as an
+        'IIFE' (Immediately Invoked Function Expression).
+
+        (async () => {
+          // await can be used here
+        })();
+
+
+    - We use 'fetch()' to retrieve the user's post feed.  If the request succeeds, the list of posts is
+        set in the 'posts' state variable through the 'setPosts()' setter function.
+
+      When the state variable changes, React will trigger a new render of the component, and this time the
+        loop section of the JSX will be used.
+
+
+
+- Rendering Blog Posts
+
+    - We'll refactor the Posts by moving the rendering of a single post into a separate component called
+        Post.  Here is the Posts component after making this change:
+
+        src/components/Posts.js
+        ---------------------------
+        import Post from './Post';
+
+        ...
+
+        <>
+          {posts === null ?
+             <p>Could not retrieve blog posts.</p>
+          :
+            <>
+              {posts.length === 0 ?
+                <p>There are no blog posts.</p>
+              :
+                posts.map(post => <Post key={post.id} post={post} />)
+              }
+            </>
+          }
+        </>
+
+
+    - Now, we'll add the component for a single post:
+
+        src/components/Post.js
+        ---------------------------
+        import Stack from 'react-bootstrap/Stack';
+        import Image from 'react-bootstrap/Image';
+        import { Link } from 'react-router-dom';
+
+        export default function Post({ post }) {
+          return (
+            <Stack direction="horizontal" gap={3} className="Post">
+              <Image src={post.author.avatar_url + '&s=48'}
+                     alt={post.author.username} roundedCircle />
+              <div>
+                <p>
+                  <Link to={'/user/' + post.author.username}>
+                    {post.author.username}
+                  </Link>
+                  &nbsp;&mdash;&nbsp;
+                  {post.timestamp}:
+                </p>
+                <p>{post.text}</p>
+              </div>
+            </Stack>
+          );
+        }
+
+
+    - The new layout for a Post uses a horizontal stack as the main component, rather than a <p>.  The 'gap' 
+        attribute adds a margin around each child.
+
+    
+    - The server works with Gravatar URLs.  Microblog API returns Gravatar images that generate a geometric
+        design for any email addresses that do not have a registered avatar.
+
+
+
+- Post Styling Improvements
+
+    - We'll add a few minor adjustments to the CSS for posts to make them look their best.
+
+        src/index.css
+        ----------------------
+        .Content {
+          margin-top: 10px;
+        }
+
+        .Post {
+          align-items: start;
+          padding-top: 5px;
+          border-bottom: 1px solid #eee;
+        }
+
+        .Post:hover {
+          background-color: #f8f8f8;
+        }
+
+        .Post a {
+          color: #14c;
+          text-decoration: none;
+        }
+
+        .Post a:visited {
+          color: #14c;
+        }
+
+
+
+- Displaying Relative Times
+
+    - While the new Post component nicely formats blog posts on the page, one part that is still lacking
+        is how the time of the post is presented.  Microblog API returns all timestamps as ISO-8601
+        strings, which is widely used for machine-to-machine communication, but is not best for use
+        by humans.
+
+
+    - In this type of application, what works best is to show the time of a post in relative terms, ie
+        '3 hours ago'.  We'll add a 'TimeAgo' component that takes a timestamp in ISO 8601 format as a 
+        prop, and renders it to the page as a relative time.
+
+      First, we'll update the Post component to use the new TimeAgo component.
+
+        src/components/Post.js
+        ---------------------------
+        import TimeAgo from './TimeAgo';
+
+        ...
+
+        <p>
+          <Link to={'/user/' + post.author.username}>
+            {post.author.username}
+          </Link>
+          &nbsp;&mdash;&nbsp;
+          <TimeAgo isoDate={post.timestamp} />:
+        </p>
+
+
+    - Now, we'll add the TimeAgo component:
+
+        scr/components/TimeAgo.js
+        ---------------------------
+        import { useState, useEffect } from 'react';
+
+        const secondsTable = [
+          ['year', 60 * 60 * 24 * 365],
+          ['month', 60 * 60 * 24 * 30],
+          ['week', 60 * 60 * 24 * 7],
+          ['day', 60 * 60 * 24],
+          ['hour', 60 * 60],
+          ['minute', 60],
+        ];
+        const rtf = new Intl.RelativeTimeFormat(undefined, {numeric: 'auto'});
+
+        function getTimeAgo(date) {
+          // TODO
+        }
+
+        export default function TimeAgo({ isoDate }) {
+          // TODO
+        }
+
+
+    - The TimeAgo component is going to use the 'useState()' and 'useEffect()' hooks, this time for a
+        purpose that is not related to loading remote resources from the network.
+
+
+    - The 'secondsTable' has the number of seconds in a year, month, week, day, and hour.  These numbers
+        will be useful in determining which of these units is the best to use in relative time.
+
+
+    - The 'rft' constant is an instance of the 'Intl.RelativeTimeFormat' class, which is going to generate
+        the actual text of the relative time.  This class is available in all modern browsers.
+
+
+    - The 'getTimeAgo()' helper function accepts a 'Date' object and finds the best relative units to use
+        to use to render it.  Here is it's implementation:
+
+        function getTimeAgo(date) {
+          const seconds = Math.round((date.getTime() - new Date().getTime()) / 1000);
+          const absSeconds = Math.abs(seconds);
+          let bestUnit, bestTime, bestInterval;
+          for (let [unit, unitSeconds] of secondsTable) {
+            if (absSeconds >= unitSeconds) {
+              bestUnit = unit;
+              bestTime = Math.round(seconds / unitSeconds);
+              bestInterval = unitSeconds / 2;
+              break;
+            }
+          };
+          if (!bestUnit) {
+            bestUnit = 'second';
+            bestTime = parseInt(seconds / 10) * 10;
+            bestInterval = 10;
+          }
+          return [bestTime, bestUnit, bestInterval];
+        }
+
+
+    - This function works by:
+
+        - Calculating the number of seconds between the date argument and the current time, and takes the
+            absolute value since the number will be negative ('absSeconds')
+
+
+        - A for-loop iterates over the elements of 'secondsTable' to find the first unit that is smaller
+            than 'absSeconds', as this is the best relative unit to use.  If a unit is found, the function
+            stores 3 values related to it:
+
+            'bestUnit'        # The unit of time we determined was best to use
+
+            'bestTime'        # The amount of time in selected units (rounded to the nearest integer)
+
+            'bestInterval'    # The interval at which the relative time needs to be updated
+
+
+        - If none of the units in 'secondsTable' is selected, the time that needs to be rendered is less
+            than a minute old, so we use seconds as the unit.  We only update the time every 10 seconds,
+            though.
+
+
+    - Here is the implementation of the 'TimeAgo' component:
+
+        export default function TimeAgo({ isoDate }) {
+          const date = new Date(Date.parse(isoDate));
+          const [time, unit, interval] = getTimeAgo(date);
+          const [, setUpdate] = useState(0);
+
+          useEffect(() => {
+            const timerId = setInterval(
+              () => setUpdate(update => update + 1),
+              interval * 1000
+            );
+            return () => clearInterval(timerId);
+          }, [interval]);
+
+          return (
+            <span title={date.toString()}>{rtf.format(time, unit)}</span>
+          );
+        }
+
+
+    - There are a few important React tricks hidden in this component, which are worth discussing in 
+        detail.
+
+        - The component renders the timestamp as a <span> element.  The text of the element is generated
+            with the 'rtf.format()' function, provided by the browser.  This function takes the time and
+            the units, and renders locale friendly text for that amount time.  For example, if you pass
+            in time=-1 and unit='day', it will return 'yesterday' in a browser configured for English.
+
+        - The <span> element also has a 'title' attribute, which renders the date with the default string
+            representation in a tooltip.
+
+        - The state variable and side effect function take care of automatically updating these values
+            as time passes.
+
+        - When we use 'useState()' here, we only have a setter function.  This is to force the component
+            to re-render itself even though none of the inputs ever change.  React only re-renders
+            components when their props or state variables change, so the only way to force a re-render is
+            to create a dummy state variable that is not used anywhere, but is changed when a re-render is
+            needed.
+
+        - The 'useEffect()' hook is used to create a side effect function, as before.  The function
+            creates an interval timer that runs at the interval returned from the 'getTimeAgo()' function.
+
+        - The interval function calls the 'setUpdate()' setter function of the state variable as an 
+            argument.  An alternative form of the setter, that is useful when the current value of the
+            state variable is unknown or out of scope, is to pass a function instead.  With this usage,
+            React calls the function, passing the current value of the variable as an argument, and the
+            function must return the updated value.
+
+        - To avoid resource leaks, we call 'clearInterval' to cancel the interval timer when the side
+            effect function returns.
