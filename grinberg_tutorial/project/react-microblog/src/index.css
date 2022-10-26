@@ -31,10 +31,12 @@ code {
 
 .Sidebar .nav-item {
   width: 100%;
+  margin: 5px;
 }
 
 .Sidebar a {
   color: #444;
+  padding: 5px;
 }
 
 .Sidebar a:hover {
@@ -43,4 +45,8 @@ code {
 
 .Sidebar a:visited {
   color: #444;
+}
+
+.Sidebar .nav-item .active {
+  background-color: #def;
 }
