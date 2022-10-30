@@ -1,0 +1,696 @@
+-----------------------------------------------------------------------
+| CHAPTER 6 - BUILDING AN API CLIENT                                  |
+-----------------------------------------------------------------------
+
+- API Clients
+
+    - The way we are making the API call for posts won't scale very well, because as the application
+        continues to grow, there will be other components that need to make API calls, and having to
+        repeat the API logic in several places will be difficult to manage.  
+
+      This will be especially true when the calls become complex once authentication and pagination are
+        added.
+
+
+    - Instead of having each component call 'fetch()', we will put all the logic that deals with making
+        API requests into a single place.
+
+
+    - This is how a client class for this API might be used:
+
+        const api = new MicroblogApiClient();
+        const response = await api.get('/feed');
+
+        if (response.ok) {
+          setPosts(response.body.data);
+        }
+        else {
+          setPosts(null);
+        }
+
+
+    - The 'MicroBlogApiClient' class will encapsulate all the knowledge about the API, including:
+
+        - The domain and port where the server is deployed
+        - The common portion of the path for all API endpoints (/api)
+        - How to pass arguments in the query string (needed for pagination)
+        - How to catch and handle errors and exceptions
+        - How to parse the JSON in the response
+        - How to authenticate
+
+
+
+- A Simple Client Class for Microblog API
+
+    - Here is the first implementation of our API client class:
+
+        src/MicroblogApiClient.js
+        ---------------------------------
+        const BASE_API_URL = process.env.REACT_APP_BASE_API_URL;
+
+        export default class MicroblogApiClient {
+          constructor() {
+            this.base_url =  BASE_API_URL + '/api';
+          }
+
+          async request(options) {
+            let query = new URLSearchParams(options.query || {}).toString();
+            if (query !== '') {
+              query = '?' + query;
+            }
+
+            let response;
+            try {
+              response = await fetch(this.base_url + options.url + query, {
+                method: options.method,
+                headers: {
+                  'Content-Type': 'application/json',
+                  ...options.headers,
+                },
+                body: options.body ? JSON.stringify(options.body) : null,
+              });
+            }
+            catch (error) {
+              response = {
+                ok: false,
+                status: 500,
+                json: async () => { return {
+                  code: 500,
+                  message: 'The server is unresponsive',
+                  description: error.toString(),
+                }; }
+              };
+            }
+
+            return {
+              ok: response.ok,
+              status: response.status,
+              body: response.status !== 204 ? await response.json() : null
+            };
+          }
+
+          async get(url, query, options) {
+            return this.request({method: 'GET', url, query, ...options});
+          }
+
+          async post(url, body, options) {
+            return this.request({method: 'POST', url, body, ...options});
+          }
+
+          async put(url, body, options) {
+            return this.request({method: 'PUT', url, body, ...options});
+          }
+
+          async delete(url, options) {
+            return this.request({method: 'DELETE', url, ...options});
+          }
+        }
+
+
+    - The 'request()' method takes all of it's arguments from an 'options' object.  The 'method' and
+        'url' keys in this object are set by the 'get()', 'post()', 'put()', and 'delete()' helper methods.
+        The 'body' key is set by 'post' and 'put'.
+
+      Any additional options the caller might need, such as custom headers or query string parameters, are
+        accepted as a last argument on the four helper methods, and passed through.
+
+
+    - If the 'query' key is present in the 'options', we use the 'URLSearchParams' class available in the
+        browser to render the proper query string format.
+
+
+    - When the server is down or unresponsive, the 'fetch()' call raises an exception.  This application
+        handles fetch errors the same way as if the server had returned a response with a 500 status
+        code.  The 'body' in the error response is formatted in the same style as actual API errors 
+        returned by the Microblog API service.
+
+
+
+- Sharing the API Client Through a Context
+
+    - We might consider creating a separate instance of this API client in each component that needs API
+        access.  The problem is that this is inefficient when many components need to make API calls.
+
+      A better solution is to create a single instance that is shared among all components that need to
+        use the API.
+
+
+    - In previous chapter, we used props to pass data into components, but doing this would add a lot of
+        boilerplate code as the API client instance would have to be passed down from high-level
+        components down to low-level components through all the levels in between.
+
+      For cases where something needs to be shared with many components in different levels in the tree,
+        React provides 'contexts'.  A React context is created with the 'createContext()' function from
+        the React library.
+
+        import { createContext } from 'react';
+        const MyDataContext = createContext();
+
+
+    - Once the context is created, it has to be inserted in the component hierarchy, high enough so that
+        it is a parent to all components that will use data shared through it.  For example:
+
+        export default function MyApp() {
+          return (
+            <Container>
+              <Header />
+              <MyDataContext.Provider value={'data-to-share'}>
+                <Sidebar />
+                <Content />
+              </MyDataContext.Provider>
+            </Container>
+          );
+        }
+
+      In this case, the Sidebar and Content components, along with all of their children, will be able to
+        gain access to the 'value' prop set in the context provider component.
+
+
+    - To access the value of a context, the child component can use the 'useContext' hook as follows:
+
+        import { useContext } from 'react';
+        import { MyDataContext } from './MyDataContext';
+
+        export default function Sidebar() {
+          const myData = useContext(MyDataContext);
+          // ...
+        }
+
+
+    - However, in practice, this leads to code that is not very clear to read, because the components that
+        want to use the context need to import this strange context object to pass it to the 'useContext()'
+        hook.
+
+      A preferable approach is to create a 'custom hook' function that encapsulates the 'useContext()'
+        call.  A custom hook is a function that starts with the word 'use'.  Hook functions are considered
+        special by React, as the are the only functions outside of component render functions that may call
+        other hooks.  
+
+
+    - Here is an example of a custom hook for this context:
+
+        import { useContext } from 'react';
+
+        export function useMyData() {
+          return useContext(MyDataContext);
+        }
+
+
+    - The custom hook can be added in the same source file as the context object.  Child components of
+        the context then only need to import the hook function to access the context.  This leads to more
+        readable code.
+
+        import { useMyData } from './MyDataContext';
+
+        export default function Sidebar() {
+          const myData = useMyData();
+          // ...
+        }
+
+
+    - To implement a custom hook for our API client, we'll create a 'src/contexts' subdirectory and add
+        an 'ApiProvider' component to it.
+
+        src/contexts/ApiProvider.js
+        ---------------------------------
+        import { createContext, useContext } from 'react';
+        import MicroblogApiClient from '../MicroblogApiClient';
+
+        const ApiContext = createContext();
+
+        export default function ApiProvider({ children }) {
+          const api = new MicroblogApiClient();
+
+          return (
+            <ApiContext.Provider value={api}>
+              {children}
+            </ApiContext.Provider>
+          );
+        }
+
+        export function useApi() {
+          return useContext(ApiContext);
+        }
+
+
+    - Notice that this file has 2 exported functions, the 'ApiProvider' component and the custom hook
+        'useApi()', which has to be exported so that other components can use it.
+
+
+    - Now, we'll add this context high in the component hierarchy, since many other application components
+        will likely need to use it.
+
+        src/App.js
+        ---------------------------------
+        import Container from 'react-bootstrap/Container';
+        import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+        import ApiProvider from './contexts/ApiProvider';
+        import Header from './components/Header';
+        import FeedPage from './pages/FeedPage';
+        import ExplorePage from './pages/ExplorePage';
+        import UserPage from './pages/UserPage';
+        import LoginPage from './pages/LoginPage';
+
+        export default function App() {
+          return (
+            <Container fluid className="App">
+              <BrowserRouter>
+                <ApiProvider>
+                  <Header />
+                  <Routes>
+                    <Route path="/" element={<FeedPage />} />
+                    <Route path="/explore" element={<ExplorePage />} />
+                    <Route path="/user/:username" element={<UserPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="*" element={<Navigate to="/" />} />
+                  </Routes>
+                </ApiProvider>
+              </BrowserRouter>
+            </Container>
+          );
+        }
+
+
+    - Now, the 'Posts' component can use the new hook to make its API call.
+
+        src/components/Posts.js
+        --------------------------------
+        import { useState, useEffect } from 'react';
+        import Spinner from 'react-bootstrap/Spinner';
+        import { useApi } from '../contexts/ApiProvider';
+        import Post from './Post';
+
+        export default function Posts() {
+          const [posts, setPosts] = useState();
+          const api = useApi();
+
+          useEffect(() => {
+            (async () => {
+              const response = await api.get('/feed');
+              if (response.ok) {
+                setPosts(response.body.data);
+              }
+              else {
+                setPosts(null);
+              }
+            })();
+          }, [api]);
+
+          ... // <-- no changes in the rest of the function
+        }
+
+
+    - Notice that the second argument to 'useEffect()' is now 'api' instead of an empty array.  This array
+        is used to tell React what the dependencies of the side effect function are.  
+
+      With an empty array, the function only ran during the first render of the component.  When 
+        dependencies are given, a change in a dependency will make React call the side effect function
+        again, so that the component is always up to date.
+
+
+
+- The User Profile Page
+
+    - The 'Post' component renders the author of each blog post as a link that points to the 
+        /user/{username} page.  A placeholder for this page is implemented in the 'UserPage' component.
+        In this section, we'll enhance the component to request user information from the API and render
+        it to the page.
+
+
+    - In Microblog API, you can get information about a user by sending a request to /api/users/{username}.
+        We can get more information about the call from the 'Retrieve a user by username' entry in the
+        API documentation.
+
+
+    - The approach to construct the profile page is largely similar to that of the post feed:
+
+        - Create a state variable for the data that needs to be requested from the API
+
+        - Obtain the API client object with the 'useApi()' hook
+
+        - Define a side effect function that makes the API request and updates the state variable when
+            data is received
+
+        - Render a spinner while the state variable is on the first render, then show the data from the
+            state variable on the re-render
+
+
+    - Here is the complete implementation of the UserPage:
+
+        src/pages/UserPage.js
+        -------------------------------
+        import { useState, useEffect } from 'react';
+        import Stack from 'react-bootstrap/Stack';
+        import Image from 'react-bootstrap/Image';
+        import Spinner from 'react-bootstrap/Spinner';
+        import { useParams } from 'react-router-dom';
+        import Body from '../components/Body';
+        import TimeAgo from '../components/TimeAgo';
+        import { useApi } from '../contexts/ApiProvider';
+
+        export default function UserPage() {
+          const { username } = useParams();
+          const [user, setUser] = useState();
+          const api = useApi();
+
+          useEffect(() => {
+            (async () => {
+              const response = await api.get('/users/' + username);
+              setUser(response.ok ? response.body : null);
+            })();
+          }, [username, api]);
+
+          return (
+            <Body sidebar>
+              {user === undefined ?
+                <Spinner animation="border" />
+              :
+                <>
+                  {user === null ?
+                    <p>User not found.</p>
+                  :
+                    <Stack direction="horizontal" gap={4}>
+                      <Image src={user.avatar_url + '&s=128'} roundedCircle />
+                      <div>
+                        <h1>{user.username}</h1>
+                        {user.about_me && <h5>{user.about_me}</h5>}
+                        <p>
+                          Member since: <TimeAgo isoDate={user.first_seen} />
+                          <br />
+                          Last seen: <TimeAgo isoDate={user.last_seen} />
+                        </p>
+                      </div>
+                    </Stack>
+                  }
+                </>
+              }
+            </Body>
+          );
+        }
+
+
+
+- Making Components Reusable Through Props
+
+    - One small detail that would make the user profile page more interesting would be to add a list of
+        the user's blog posts below the user details.  This would be similar to the list rendered in the
+        feed page, but restricted to only show the posts from the user being viewed.
+
+      Also, the Explore page, which is still a placeholder, will need to render a list of posts as well.
+        So, we already have 3 pages in the application that will need to render a list of posts.
+
+
+    - The 'Posts' component already knows how to list a collection of blog posts, but it only renders the
+        user's feed.  So, we'll extend it to render different lists of posts, depending on what the parent
+        component wants.
+
+      
+    - To make this component more flexible, a 'content' prop can be added to it.
+
+        - If this prop is not given, or if it is set to 'feed', then the user's feed is displayed as before.
+
+        - If the prop is set to 'explore', then all available blog posts are rendered.
+
+        - If the prop is set to any other value, it is assumed to be a user id, and then the posts that
+            are displayed are those of the user with the requested ID.
+
+
+    - Here are the changes to the 'Posts' component:
+
+        src/components/Posts.js
+        ---------------------------------
+        ... // <-- no changes to imports
+
+        export default function Posts({ content }) {
+          const [posts, setPosts] = useState();
+          const api = useApi();
+
+          let url;
+          switch (content) {
+            case 'feed':
+            case undefined:
+              url = '/feed';
+              break;
+            case 'explore':
+              url = '/posts';
+              break
+            default:
+              url = `/users/${content}/posts`;
+              break;
+          }
+
+          useEffect(() => {
+            (async () => {
+              const response = await api.get(url);
+              if (response.ok) {
+                setPosts(response.body.data);
+              }
+              else {
+                setPosts(null);
+              }
+            })();
+          }, [api, url]);
+
+          ... // <-- no changes in the rest of the function
+        }
+
+
+    - Note that we've added 'url' to the dependencies of the effect function, since it's a variable from
+        outside the function, and the effect needs to be run again whenever this variable is changed.
+
+
+    - The user profile page can now include a list of posts by the user being viewed.
+
+        src/pages/UserPage.js
+        --------------------------------
+        import Posts from '../components/Posts';
+
+        export default function UserPage() {
+          ... // <-- no changes in the main logic of the function
+
+          return (
+            <Body sidebar>
+              {user === undefined ?
+                <Spinner animation="border" />
+              :
+                <>
+                  {user === null ?
+                    <p>Could not retrieve blog posts.</p>
+                  :
+                    <>
+                      <Stack direction="horizontal" gap={4}>
+                        ... // <-- no changes to user details
+                      </Stack>
+                      <Posts content={user.id} />
+                    </>
+                  }
+                </>
+              }
+            </Body>
+          );
+        }
+
+
+    - We can also update the Explore page to render the posts from all users:
+
+        src/pages/ExplorePage.js
+        --------------------------------
+        import Body from '../components/Body';
+        import Posts from '../components/Posts';
+
+        export default function ExplorePage() {
+          return (
+            <Body sidebar>
+              <Posts content="explore" />
+            </Body>
+          );
+        }
+
+
+
+- Pagination
+
+    - The list of blog posts returned by Microblog API are paginated.  For a given request, the server
+        returns the first few items, up to a configurable maximum (25 is the default).
+
+
+    - The 'data' attribute in the response payload contains the list of requested items.  The server
+        includes a second attribute in all the responses that includes lists called 'pagination',
+        which provides details about the portion of the complete list that was returned.
+
+        {
+          "data": [
+
+          ],
+          "pagination": {
+            "count": 25,
+            "limit": 25,
+            "offset": 0,
+            "total": 124
+          }
+        }
+
+
+    - Here,
+
+        - 'data' includes 25 elements
+        - 'count' is how many elements are included in 'data'
+        - 'limit' is the maximum page size that can be retuned
+        - 'offset' is the 0-based index of the first element returned
+        - 'total' is the size of the entire list
+
+
+    - To let the user add more elements, a 'More' button is going to be displayed at the bottom of the list,
+        when there are more elements available.  Clicking the button will trigger a new request to be
+        issued more items.
+
+      We'll begin by adding a generic 'More' component:
+
+        src/components/More.js
+        -------------------------------
+        import Button from 'react-bootstrap/Button';
+
+        export default function More({ pagination, loadNextPage }) {
+          let thereAreMore = false;
+          if (pagination) {
+            const { offset, count, total } = pagination;
+            thereAreMore = offset + count < total;
+          }
+
+          return (
+            <div className="More">
+              {thereAreMore &&
+                <Button variant="outline-primary" onClick={loadNextPage}>
+                  More &raquo;
+                </Button>
+              }
+            </div>
+          );
+        }
+
+
+    - The 'More' component has 2 props.  The 'pagination' prop receives a pagination object extracted
+        from a Microblog API response.  The 'loadNextPage' prop is a handler that the parent component
+        must provide, used to load the next page when the More button is clicked.
+
+
+    - The button is wrapped in a <div> element that is assigned to the 'More' class.  We'll add some styles
+        to 'index.css' using this class.
+
+        src/index.css
+        ---------------------------
+        .More {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          text-align: right;
+        }
+
+
+    - To support pagination in all the pages that show a list of posts, the 'Posts' component can be
+        expanded to use the 'More' button.
+
+        src/components/Posts.js
+        ---------------------------
+        ... // <-- no changes to existing imports
+        import More from './More';
+
+        export default function Posts({ content = 'feed' }) {
+          const [posts, setPosts] = useState();
+          const [pagination, setPagination] = useState();
+          const api = useApi();
+
+          ... // <-- no changes to how url is determined
+
+          useEffect(() => {
+            (async () => {
+              const response = await api.get(url);
+              if (response.ok) {
+                setPosts(response.body.data);
+                setPagination(response.body.pagination);
+              }
+              else {
+                setPosts(null);
+              }
+            })();
+          }, [api, url]);
+
+          const loadNextPage = async () => {
+            // TODO
+          };
+
+          return (
+            <>
+              {posts === undefined ?
+                <Spinner animation="border" />
+              :
+                <>
+                  {posts === null ?
+                    <p>Could not retrieve blog posts.</p>
+                  :
+                    <>
+                      {posts.length === 0 ?
+                        <p>There are no blog posts.</p>
+                      :
+                        posts.map(post => <Post key={post.id} post={post} />)
+                      }
+                      <More pagination={pagination} loadNextPage={loadNextPage} />
+                    </>
+                  }
+                </>
+              }
+            </>
+          );
+        }
+
+
+    - Now, we can see the 'More' button on the 'Explore' page, which has enough data to make it appear.
+        The 'Feed' page may not.  Next, we need to implement the 'loadNextPage()' function to load
+        more posts.
+
+        - The 'offset' option can be used to request items starting at a specific offset.  If the feed
+            page is displaying the first 25 blog posts, passing 'offset=25' to the same request URL
+            would return blog posts 25-49.
+
+        - The 'after' option can be used to request additional items, but it works differently from 'offset'.
+            For 'after', the argument needs to be a timestamp value of the last post being displayed.
+            So, for example it could be 'after=posts[posts.length - 1].timestamp'.
+
+        - Which one to use depends on the specific application.  One disadvantage of 'offset' is that it
+            only works well for lists that have new items added at the end.  
+
+        - The blog posts returned by Microblog API are sorted by their publication data in descending order,
+            so new posts are always inserted at the start of the list, pushing older items down.
+
+        - The 'after' option only works well for lists that have a well-defined ordering.
+
+
+    - Here is how we'll implement 'loadNextPage()' for the Posts component, using the 'after' query
+        parameter.
+
+        src/components/Posts.js
+        -----------------------------
+          const loadNextPage = async () => {
+            const response = await api.get(url, {
+              after: posts[posts.length - 1].timestamp
+            });
+            if (response.ok) {
+              setPosts([...posts, ...response.body.data]);
+              setPagination(response.body.pagination);
+            }
+          };
+
+
+    - The function makes a request on the same url as before, but this time the second argument to api.get()
+        is called with the 'after' query param added.
+
+
+    - When the response is received, the 'posts' state variable is updated to a combined list of old and
+        new blog posts, using the ... spread operator.  The pagination state variable is also updated with
+        the new details received in the paginated request.
+
+      The change in these 2 state variables will cause the Posts component to render again, which in turn 
+        will make the new blog posts appear at the bottom of the list.
+
+
+    - The More button at the bottom of the list will continue to appear until there are no more items to
+        load.
