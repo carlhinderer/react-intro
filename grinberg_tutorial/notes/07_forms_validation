@@ -1,0 +1,710 @@
+-----------------------------------------------------------------------
+| CHAPTER 7 - FORMS & VALIDATION                                      |
+-----------------------------------------------------------------------
+
+- Forms with React-Bootstrap
+
+    - React-Bootstrap has components for forms.  Here is example code for a login form:
+
+        <Form>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control type="email" placeholder="Enter email" />
+            <Form.Text className="text-muted">
+              {"We'll never share your email with anyone else."}
+            </Form.Text>
+          </Form.Group>
+
+          // ... more fields here
+
+        </Form>
+
+
+    - Here,
+
+        Form.Label        # Defines the label
+        Form.Control      # Defines the actual input field
+        Form.Text         # Defines a message that appears below the field
+
+
+
+- A Reusable Form Input Field
+
+    - We can see that defining an input field requires a lot of boilerplate.  To reduce this, we can create
+        a reusable input field component.
+
+        src/components/InputField.js
+        ---------------------------------
+        import Form from 'react-bootstrap/Form';
+
+        export default function InputField(
+          { name, label, type, placeholder, error, fieldRef }
+        ) {
+          return (
+            <Form.Group controlId={name} className="InputField">
+              {label && <Form.Label>{label}</Form.Label>}
+              <Form.Control
+                type={type || 'text'}
+                placeholder={placeholder}
+                ref={fieldRef}
+              />
+              <Form.Text className="text-danger">{error}</Form.Text>
+            </Form.Group>
+          );
+        }
+
+
+    - There are a few minor differences between this field and the example one from React-Bootstrap:
+
+        - The label is omitted if the 'label' prop is not passed by the parent component
+
+        - The 'type' prop is optional, and defaults to 'text' when not passed by the parent
+
+        - The error message uses a 'text-danger' style from Bootstrap, which renders the text in red
+
+        - The 'placeholder' and 'error' props are optional, and will render as empty if not provided
+
+
+    - There is one more prop in this component called 'fieldRef', which is in turn passed to the 
+        'Form.Control' component as a 'ref' prop.  A reference provides a way for the application to
+        interact with a rendered element.
+
+
+    - The top-level component was given the 'InputField' class name to make it easier to customize how it
+        looks on the page.  We'll add simple styles to add top and bottom margins to the component.
+
+        src/index.css
+        ---------------------
+        .InputField {
+          margin-top: 15px;
+          margin-bottom: 15px;
+        }
+
+
+
+- The Login Form
+
+    - Using the generic input field, we can now build the login page:
+
+        src/pages/LoginPage.js
+        ----------------------------
+        import { useState } from 'react';
+        import Form from 'react-bootstrap/Form';
+        import Button from 'react-bootstrap/Button';
+        import Body from '../components/Body';
+        import InputField from '../components/InputField';
+
+        export default function LoginPage() {
+          const [formErrors, setFormErrors] = useState({});
+
+          const onSubmit = (ev) => {
+            ev.preventDefault();
+            console.log('handle form here');
+          };
+
+          return (
+            <Body>
+              <h1>Login</h1>
+              <Form onSubmit={onSubmit}>
+                <InputField
+                  name="username" label="Username or email address"
+                  error={formErrors.username} />
+                <InputField
+                  name="password" label="Password" type="password"
+                  error={formErrors.password} />
+                <Button variant="primary" type="submit">Login</Button>
+              </Form>
+            </Body>
+          );
+        }
+
+
+    - Since the login page will not offer navigation links, we do not need the 'sidebar' prop.
+
+
+    - The 'Form' component has an 'onSubmit' prop, which configures a handler function that will be 
+        invoked when the form is submitted.  The handler starts by disabling the browser's own form
+        submission logic, by calling the 'ev.preventDefault()' method of the event object that was passed
+        in as an argument.
+
+      Right now, the component doesn't implement the form handling logic yet, it just logs a message to
+        the console to confirm an event was received.
+
+
+    - The 'error' props in both input fields is set to an attribute of a 'formErrors' state variable 
+        defined inside the component.  The state variable is initialized as an empty object, so the error
+        messages from both fields are going to be initially set to 'undefined'.
+
+
+
+- Controlled and Uncontrolled Components
+
+    - When you implement a form field, you need to be able to read what the user enters into the fields.
+        There are 2 main techniques to handle user input in React: using controlled or uncontrolled
+        components.
+
+
+    - A 'controlled component' is coded with event handlers that catch all changes to input fields.  
+        Every time a change handler triggers for a field, the updated contents of the field are copied to
+        a React state variable.  
+
+      With this method, the values of the input fields for a form can be obtained form a state variable
+        that acts as a mirror of the field.
+
+
+    - An 'uncontrolled component' does not have it's value tracked by React.  When the field's data is
+        needed, DOM APIs are used to obtain it directly from the element.
+
+
+    - One disadvantage of the controlled method, especially for forms with large numbers of fields, is
+        that every field needs a state variable and one or more event handlers.  We'll use the uncontrolled
+        method in all forms, since they require significantly less code.
+
+
+
+- Accessing Components through DOM References
+
+    - When working with vanilla JavaScript, the standard method to reference an element is to give it an
+        'id' attribute, which makes it possible to retrieve the element with the 
+        'document.getElementById()' function.  
+
+      In complex applications, it is difficult to maintain unique id values for all elements, and it is easy 
+        to inadvertently introduce duplicates.
+
+
+    - React has a more elegant solution based on 'references'.  A reference eliminates the need to come up
+        with a unique identifier for every element.  A reference can be created with the 'useRef()' hook
+        inside a component's 'render()' function.
+
+        export default function MyForm() {
+          const usernameField = useRef();
+          ...
+        }
+
+
+    - To associate this reference with an element rendered to the page, the 'ref' attribute is added to the
+        element when it is rendered.
+
+        export default function MyForm() {
+          const usernameField = useRef();
+
+          return (
+            <form>
+              <input type="text" ref={usernameField} />
+            </form>
+          );
+        }
+
+
+    - The reference has a 'current' attribute that can be used in side effect functions and event handlers
+        to access the actual DOM object associated with the component:
+
+        export default function MyForm() {
+          const usernameField = useRef();
+
+          const onSubmit = (ev) => {
+            ev.preventDefault();
+            alert('Your username is: ' + usernameField.current.value);
+          };
+
+          return (
+            <form onSubmit={onSubmit}>
+              <input type="text" ref={usernameField} />
+            </form>
+          );
+        }
+
+
+
+- Implementing References for the LoginPage Component Fields
+
+    - Remember that the 'InputField' component accepts a 'fieldRef' prop.  The parent can use this prop to
+        pass a reference object.  This reference is assigned to the 'ref' prop on the input field element.
+        This way, the parent gets access to the input field and can obtain it's value when processing the
+        form submission.
+
+
+    - Now, we will add references to the 2 input fields in the LoginPage component:
+
+        src/pages/LoginPage.js
+        -----------------------------
+        import { useState, useEffect, useRef } from 'react';
+        import Form from 'react-bootstrap/Form';
+        import Button from 'react-bootstrap/Button';
+        import Body from '../components/Body';
+        import InputField from '../components/InputField';
+
+        export default function LoginPage() {
+          const [formErrors, setFormErrors] = useState({});
+          const usernameField = useRef();
+          const passwordField = useRef();
+
+          useEffect(() => {
+            usernameField.current.focus();
+          }, []);
+
+          const onSubmit = (ev) => {
+            ev.preventDefault();
+            const username = usernameField.current.value;
+            const password = passwordField.current.value;
+
+            console.log(`You entered ${username}:${password}`);
+          };
+
+          return (
+            <Body>
+              <h1>Login</h1>
+              <Form onSubmit={onSubmit}>
+                <InputField
+                  name="username" label="Username or email address"
+                  error={formErrors.username} fieldRef={usernameField} />
+                <InputField
+                  name="password" label="Password" type="password"
+                  error={formErrors.password} fieldRef={passwordField} />
+                <Button variant="primary" type="submit">Login</Button>
+              </Form>
+            </Body>
+          );
+        }
+
+
+    - The 'usernameField' and 'passwordField' references are created at the start of the 'render' function,
+        and are passed as 'fieldRef' props to the 2 InputField components, which will in turn set these
+        references on the actual input elements of the form.
+
+
+    - This new version of 'LoginPage' has a new side effect function that shows a nice trick that takes
+        advantage of the new references.  The function runs only the first time the login page is
+        rendered.  
+
+      This means that the user can start typing, with the focus on the username field.  The 'focus()'
+        method used here is part of the DOM API.
+
+
+    - The 'onSubmit' event handler now retrieves the values and logs them to the console.
+
+
+
+- Client-Side Field Validation
+
+    - Even though all data is validated on the server side, it is common for clients to perform 
+        complementary validations to make the app more responsive.  For example, checks can be added to
+        make sure the fields aren't empty before submitting the form.
+
+
+    - The 'formErrors' state variable is used to hold validation error messages on form fields.  We'll
+        add validation to the 'onSubmit' handler.
+
+        src/pages/LoginPage.js
+        ------------------------------
+          const onSubmit = (ev) => {
+            ev.preventDefault();
+            const username = usernameField.current.value;
+            const password = passwordField.current.value;
+
+            const errors = {};
+            if (!username) {
+              errors.username = 'Username must not be empty.';
+            }
+            if (!password) {
+              errors.password = 'Password must not be empty.';
+            }
+            setFormErrors(errors);
+            if (Object.keys(errors).length > 0) {
+              return;
+            }
+
+            // TODO: log the user in
+          };
+
+
+    - Now, if we try to submit with these fields empty, we will see the error message.  If we submit again
+        with the errors resolved, the messages will disappear.
+
+
+
+- The User Registration Form
+
+    - Now, we'll implement another form for registering new users into the system.
+
+        src/pages/RegistrationPage.js
+        --------------------------------
+        import { useState, useEffect, useRef } from 'react';
+        import Form from 'react-bootstrap/Form';
+        import Button from 'react-bootstrap/Button';
+        import Body from '../components/Body';
+        import InputField from '../components/InputField';
+
+        export default function RegistrationPage() {
+          const [formErrors, setFormErrors] = useState({});
+          const usernameField = useRef();
+          const emailField = useRef();
+          const passwordField = useRef();
+          const password2Field = useRef();
+
+          useEffect(() => {
+            usernameField.current.focus();
+          }, []);
+
+          const onSubmit = async (event) => {
+            // TODO
+          };
+
+          return (
+            <Body>
+              <h1>Register</h1>
+              <Form onSubmit={onSubmit}>
+                <InputField
+                  name="username" label="Username"
+                  error={formErrors.username} fieldRef={usernameField} />
+                <InputField
+                  name="email" label="Email address"
+                  error={formErrors.email} fieldRef={emailField} />
+                <InputField
+                  name="password" label="Password" type="password"
+                  error={formErrors.password} fieldRef={passwordField} />
+                <InputField
+                  name="password2" label="Password again" type="password"
+                  error={formErrors.password2} fieldRef={password2Field} />
+                <Button variant="primary" type="submit">Register</Button>
+              </Form>
+            </Body>
+          );
+        }
+
+
+    - The registration form has 4 fields:
+
+        - username
+        - email
+        - password
+        - password confirmation
+
+
+    - This new page needs to be associated with the '/register' route in 'App.js'.
+
+        import RegistrationPage from './pages/RegistrationPage';
+        ...
+        <Route path="/register" element={<RegistrationPage />} />
+
+
+    - The login page can include a link to the new registration page below the form's submit button:
+
+        import { Link } from 'react-router-dom';
+
+        export default function LoginPage() {
+          ... // <-- no changes in the body of the function
+
+          return (
+            <Body>
+              <h1>Login</h1>
+              ... // <-- no changes to the form
+              <hr />
+              <p>Don&apos;t have an account? <Link to="/register">Register here</Link>!</p>
+            </Body>
+          );
+        }
+
+
+
+- Form Submission and Server-Side Field Validation
+
+    - Registering a new user with Microblog API is a straightforward operation that requires sending a POST
+        request to 'api/users' with the new user's username, email, and chosen password.
+
+      This request can be made through the MicroblogApiClient instance, which can be accessed in this
+        component throught the 'useApi()' custom hook.
+
+
+    - Here are the changes to the registration page to support the form submission:
+
+        src/pages/RegistrationPage.js
+        ----------------------------------
+        ... // <-- no changes to existing imports
+        import { useNavigate } from 'react-router-dom';
+        import { useApi } from '../contexts/ApiProvider';
+
+        export default function RegistrationPage() {
+          ... // <-- no changes to state variables and references
+          const navigate = useNavigate();
+          const api = useApi();
+
+          const onSubmit = async (event) => {
+            event.preventDefault();
+            if (passwordField.current.value !== password2Field.current.value) {
+              setFormErrors({password2: "Passwords don't match"});
+            }
+            else {
+              const data = await api.post('/users', {
+                username: usernameField.current.value,
+                email: emailField.current.value,
+                password: passwordField.current.value
+              });
+              if (!data.ok) {
+                setFormErrors(data.body.errors.json);
+              }
+              else {
+                setFormErrors({});
+                navigate('/login');
+              }
+            }
+          };
+
+          ... // <-- no changes to returned JSX
+        }
+
+
+    - If the request fails due to server-side validation, the back end returns an error response.  The body
+        of the response includes detailed information about the error, in particular the 'errors.json' 
+        object contains validation error messages for each field.
+
+      This is very convenient, because the 'formErrors' state variable uses the same format.  To display
+        the validation errors from the server, this object is set directly on the state variable.
+
+
+
+- Flashing Messages to the User
+
+    - Right now, if a user is successfully registered, they are unceremoniously redirected to the login
+        page, without any indication of success or failure.  Instead, we'll flash a message to the user.
+
+      In React-Bootstrap, the Alert component can be used to create a flash message component.
+
+
+    - To flash a message, a component needs to share the message to be flashed with the component that
+        renders the alert message, which is likely in a different component in the tree.
+
+
+    - Here is an example of how a 'MyForm' component might flash a message after processing a form:
+
+        export default function MyForm() {
+          const { flash } = useFlash();
+
+          const onSubmit = (ev) => {
+            ev.preventDefault();
+            ... // form processing here
+            flash('Your registration has been successful', 'success');
+          };
+
+          return ( ... );
+          }
+        }
+
+
+    - This is a nice pattern, because any component that needs to flash a message can just get the 'flash()'
+        function from the 'userFlash()' hook, without having to worry about how the altert is going to 
+        render in the page.
+
+
+    - To implement something like this, we can use a React context.  The component hierarchy that supports
+        flashing might look like:
+
+        <FlashProvider>
+          <Alert />
+          <MyForm />
+        </FlashProvider>
+
+
+    - The 'FlashProvider' can share a context that includes the 'flash()' function, which child components
+        such as 'MyForm' can use to set the alert message.  The context will also need to share the text
+        and style of the message, so that the component in charge of rendering the alert has the information
+        it needs.
+
+
+    - Here is the implementation of 'FlashProvider', with support for automatically hiding the alert after
+        a specified number of seconds.
+
+        src/contexts/FlashProvider.js
+        ----------------------------------
+        import { createContext, useContext, useState } from 'react';
+
+        export const FlashContext = createContext();
+        let flashTimer;
+
+        export default function FlashProvider({ children }) {
+          const [flashMessage, setFlashMessage] = useState({});
+          const [visible, setVisible] = useState(false);
+
+          const flash = (message, type, duration = 10) => {
+            if (flashTimer) {
+              clearTimeout(flashTimer);
+              flashTimer = undefined;
+            }
+            setFlashMessage({message, type});
+            setVisible(true);
+            if (duration) {
+              flashTimer = setTimeout(hideFlash, duration * 1000);
+            }
+          };
+
+          const hideFlash = () => {
+            setVisible(false);
+          };
+
+          return (
+            <FlashContext.Provider value={{flash, hideFlash, flashMessage, visible}}>
+              {children}
+            </FlashContext.Provider>
+          );
+        }
+
+        export function useFlash() {
+          return useContext(FlashContext).flash;
+        }
+
+
+    - The 'FlashContext' object is created in global scope, and the 'FlashContext.Provider' component is 
+        then rendered as a wrapper of the component's children.  The value shared by this context is an
+        object with 4 elements:
+
+        flash            # The function that components can use to flash a message to the page
+
+        hideFlash        # A function that updates the visible state of the flash message to 'false'
+
+        flashMessage     # An object with message and type properties, defining the alert's display.
+                         #   The 'type' property can be any of the styling options supported by 
+                         #   Bootstrap's alerts (ie 'success', 'danger', 'info', etc.)
+
+        visible          # The current visible state of the alert
+
+
+    - Notice that the 'value={{}}' prop of the FlashContext.Provider component has a syntax that looks
+        strange.  In React, when a prop needs to be assigned to a value that is an object, 2 sets of
+        braces are required.  The outer braces tell the JSX parser that the value is given as a JavaScript
+        expression.  The inner braces are the object braces.
+
+
+    - The component has 2 state variables.  The 'flashMessage' state variable holds the message and type
+        of the current alert.  The 'visible' variable is a boolean that keeps track of when the alert is
+        displayed.
+
+
+    - The flash context needs to be placed high enough in the component tree that all components that may
+        need to render messages are children.
+
+        src/App.js
+        -------------------------
+        ... // <-- no changes to existing imports
+        import FlashProvider from './contexts/FlashProvider';
+
+        export default function App() {
+          return (
+            <Container fluid className="App">
+              <BrowserRouter>
+                <FlashProvider>
+                  <ApiProvider>
+                    <Header />
+                    <Routes>
+                      ... // <-- no changes to routes
+                    </Routes>
+                  </ApiProvider>
+                </FlashProvider>
+              </BrowserRouter>
+            </Container>
+          );
+        }
+
+
+
+- The FlashMessage Component
+
+    - Now, we need a component that displays the flashed messages.  Here is an implementation:
+
+        src/components/FlashMessage.js
+        ------------------------------------
+        import { useContext } from 'react';
+        import Alert from 'react-bootstrap/Alert';
+        import Collapse from 'react-bootstrap/Collapse';
+        import { FlashContext } from '../contexts/FlashProvider';
+
+        export default function FlashMessage() {
+          const { flashMessage, visible, hideFlash } = useContext(FlashContext);
+
+          return (
+            <Collapse in={visible}>
+              <div>
+                <Alert variant={flashMessage.type || 'info'} dismissible
+                  onClose={hideFlash}>
+                  {flashMessage.message}
+                </Alert>
+              </div>
+            </Collapse>
+          );
+        }
+
+
+    - The component uses the 'useContext()' hook to access the 'message', 'visible', and 'hideFlash'
+        props.
+
+
+    - The component takes advantage of the Alert and Collapse components of React-Bootstrap.  Collapse
+        adds a nice sliding animation when the alert is shown or hidden.  The 'in' prop of Collapse
+        determines whether the component needs to be shown or hidden.
+
+
+    - In order to have a smooth transition with the Collapse component, we need to wrap the collapsible
+        elements in a <div>.
+
+
+    - To make these alerts more friendly, the 'dismissable' prop is added, so that there is a close button
+        on the alert that the user can click to immediately dismiss it, without having to wait for the
+        timer to do it.  The 'onClose' prop is the handler for the close action, which is directly sent
+        to the same 'hideFlash' function the timer uses.
+
+
+    - We can add the FlashMessage component to the Body component.
+
+        src/components/Body.js
+        --------------------------------
+        ... // <-- no changes to existing imports
+        import FlashMessage from './FlashMessage';
+
+        export default function Body({ sidebar, children }) {
+          return (
+            <Container>
+              <Stack direction="horizontal" className="Body">
+                {sidebar && <Sidebar />}
+                <Container className="Content">
+                  <FlashMessage />
+                  {children}
+                </Container>
+              </Stack>
+            </Container>
+          );
+        }
+
+
+    - Now, we can add the flash message to the registration page to display a success message after 
+        registration.
+
+        src/pages/RegistrationPage.js
+        -------------------------------
+        ... // <-- no changes to existing imports
+        import { useFlash } from '../contexts/FlashProvider';
+
+        export default function RegistrationPage() {
+          ... // <-- no changes to state variables, references and other hooks
+          const flash = useFlash();
+
+          ... // <-- no changes to side effect function
+
+          const onSubmit = async (event) => {
+            event.preventDefault();
+            if (passwordField.current.value !== password2Field.current.value) {
+              ... // <-- no changes to client-side validation
+            }
+            else {
+              ... <-- no changes
+              if (!data.ok) {
+                ... // <-- no changes
+              }
+              else {
+                setFormErrors({});
+                flash('You have successfully registered!', 'success');
+                navigate('/login');
+              }
+            }
+          };
+
+          ... // <-- no changes to returned JSX
+        }
